@@ -3,8 +3,11 @@ package br.edu.ifpb.view;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+import javax.swing.AbstractListModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -14,17 +17,31 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import br.edu.ifpb.controler.Sistema;
+import br.edu.ifpb.model.Dossie;
+import br.edu.ifpb.model.Imagem;
 
 @SuppressWarnings("serial")
 public class TelaCadastroDossie extends JDialog {
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
+	private JTextField instituicao;
+	private JTextField curso;
+	private JTextField aluno;
+	private JTextField titulo;
+	private JTextField classificao;
+	private JTextField codigoDossie;
+	private JTextField qntDocumentos;
+	@SuppressWarnings("rawtypes")
+	private JComboBox tipo;
+	@SuppressWarnings("rawtypes")
+	private JList lista;
+	private JTextPane descricao;
+	private JLabel lblNenhumaImagemSelecionada;
+	private JScrollPane scrollPane_1;
 
 	/**
 	 * Launch the application.
@@ -33,7 +50,7 @@ public class TelaCadastroDossie extends JDialog {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TelaCadastroDossie dialog = new TelaCadastroDossie(null);
+					TelaCadastroDossie dialog = new TelaCadastroDossie(null,null);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);
 				} catch (Exception e) {
@@ -45,9 +62,10 @@ public class TelaCadastroDossie extends JDialog {
 
 	/**
 	 * Create the dialog.
+	 * @param dossie 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public TelaCadastroDossie(JFrame principal) {
+	public TelaCadastroDossie(JFrame principal, Dossie dossie) {
 		super(principal,"Dossiê",true);
 		setBounds(100, 100, 802, 598);
 		getContentPane().setLayout(null);
@@ -56,12 +74,13 @@ public class TelaCadastroDossie extends JDialog {
 		lblAluno.setBounds(25, 82, 46, 14);
 		getContentPane().add(lblAluno);
 		
-		textField = new JTextField();
-		textField.setEnabled(false);
-		textField.setEditable(false);
-		textField.setBounds(139, 30, 350, 20);
-		getContentPane().add(textField);
-		textField.setColumns(10);
+		instituicao = new JTextField();
+		instituicao.setText(dossie.getInstituicao().getNome());
+		instituicao.setEnabled(false);
+		instituicao.setEditable(false);
+		instituicao.setBounds(139, 30, 350, 20);
+		getContentPane().add(instituicao);
+		instituicao.setColumns(10);
 		
 		JLabel lblInstituicao = new JLabel("Instituicao:");
 		lblInstituicao.setBounds(25, 30, 69, 14);
@@ -71,37 +90,39 @@ public class TelaCadastroDossie extends JDialog {
 		lblCurso.setBounds(25, 55, 55, 16);
 		getContentPane().add(lblCurso);
 		
-		textField_1 = new JTextField();
-		textField_1.setEnabled(false);
-		textField_1.setEditable(false);
-		textField_1.setBounds(139, 56, 350, 20);
-		getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		curso = new JTextField();
+		curso.setText(dossie.getCurso().getNome());
+		curso.setEnabled(false);
+		curso.setEditable(false);
+		curso.setBounds(139, 56, 350, 20);
+		getContentPane().add(curso);
+		curso.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setEnabled(false);
-		textField_2.setEditable(false);
-		textField_2.setBounds(139, 82, 350, 20);
-		getContentPane().add(textField_2);
-		textField_2.setColumns(10);
+		aluno = new JTextField();
+		aluno.setText(dossie.getAluno().getNome());
+		aluno.setEnabled(false);
+		aluno.setEditable(false);
+		aluno.setBounds(139, 82, 350, 20);
+		getContentPane().add(aluno);
+		aluno.setColumns(10);
 		
 		JLabel lblTtulo = new JLabel("T\u00EDtulo:");
 		lblTtulo.setBounds(25, 140, 55, 16);
 		getContentPane().add(lblTtulo);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(139, 138, 350, 20);
-		getContentPane().add(textField_3);
-		textField_3.setColumns(10);
+		titulo = new JTextField();
+		titulo.setBounds(139, 138, 350, 20);
+		getContentPane().add(titulo);
+		titulo.setColumns(10);
 		
 		JLabel lblClassificao = new JLabel("Classifica\u00E7\u00E3o:");
 		lblClassificao.setBounds(25, 168, 93, 16);
 		getContentPane().add(lblClassificao);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(139, 170, 350, 20);
-		getContentPane().add(textField_4);
-		textField_4.setColumns(10);
+		classificao = new JTextField();
+		classificao.setBounds(139, 170, 350, 20);
+		getContentPane().add(classificao);
+		classificao.setColumns(10);
 		
 		JLabel lblDescrio = new JLabel("Descri\u00E7\u00E3o:");
 		lblDescrio.setBounds(25, 230, 78, 16);
@@ -111,21 +132,21 @@ public class TelaCadastroDossie extends JDialog {
 		scrollPane.setBounds(139, 202, 350, 92);
 		getContentPane().add(scrollPane);
 		
-		JTextPane textPane = new JTextPane();
-		scrollPane.setViewportView(textPane);
+		descricao = new JTextPane();
+		scrollPane.setViewportView(descricao);
 		
 		JLabel lblNewLabel = new JLabel("Imagens:");
 		lblNewLabel.setBounds(25, 321, 64, 16);
 		getContentPane().add(lblNewLabel);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(139, 321, 136, 153);
 		getContentPane().add(scrollPane_1);
 		
-		JList list = new JList();
-		scrollPane_1.setViewportView(list);
+		lista = new JList();
+		scrollPane_1.setViewportView(lista);
 		
-		JLabel lblNenhumaImagemSelecionada = new JLabel("Nenhuma Imagem Selecionada");
+		lblNenhumaImagemSelecionada = new JLabel("Nenhuma Imagem Selecionada");
 		lblNenhumaImagemSelecionada.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNenhumaImagemSelecionada.setBounds(516, 140, 258, 345);
 		getContentPane().add(lblNenhumaImagemSelecionada);
@@ -144,10 +165,10 @@ public class TelaCadastroDossie extends JDialog {
 		lblTipoDoDocumento.setBounds(25, 112, 112, 16);
 		getContentPane().add(lblTipoDoDocumento);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Documento Acad\u00EAmico", "Documento Pessoal"}));
-		comboBox.setBounds(139, 108, 350, 25);
-		getContentPane().add(comboBox);
+		tipo = new JComboBox();
+		tipo.setModel(new DefaultComboBoxModel(new String[] {"Documento Acad\u00EAmico", "Documento Pessoal"}));
+		tipo.setBounds(139, 108, 350, 25);
+		getContentPane().add(tipo);
 		
 		JButton btnCadastrarDocumento = new JButton("Cadastrar");
 		btnCadastrarDocumento.setBounds(25, 522, 159, 26);
@@ -173,31 +194,69 @@ public class TelaCadastroDossie extends JDialog {
 		lblCdigoDoDossi.setBounds(517, 32, 112, 16);
 		getContentPane().add(lblCdigoDoDossi);
 		
-		textField_5 = new JTextField();
-		textField_5.setEnabled(false);
-		textField_5.setEditable(false);
-		textField_5.setBounds(711, 30, 46, 20);
-		getContentPane().add(textField_5);
-		textField_5.setColumns(10);
+		codigoDossie = new JTextField();
+		codigoDossie.setEnabled(false);
+		codigoDossie.setEditable(false);
+		codigoDossie.setBounds(711, 30, 46, 20);
+		getContentPane().add(codigoDossie);
+		codigoDossie.setColumns(10);
 		
 		JLabel lblQuantidadeDeDocumentos = new JLabel("Quantidade De Documentos:");
 		lblQuantidadeDeDocumentos.setBounds(516, 55, 168, 16);
 		getContentPane().add(lblQuantidadeDeDocumentos);
 		
-		textField_6 = new JTextField();
-		textField_6.setEnabled(false);
-		textField_6.setEditable(false);
-		textField_6.setBounds(711, 53, 46, 20);
-		getContentPane().add(textField_6);
-		textField_6.setColumns(10);
+		qntDocumentos = new JTextField();
+		qntDocumentos.setEnabled(false);
+		qntDocumentos.setEditable(false);
+		qntDocumentos.setBounds(711, 53, 46, 20);
+		getContentPane().add(qntDocumentos);
+		qntDocumentos.setColumns(10);
 
 	}
 	
 	private class DigitalizarNovaImagemListener implements ActionListener{
 
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			Imagem img = Sistema.digitalizaImagem();
+			Sistema.adicionaImagem(img);
+			int qnt = Sistema.getQntImagensDigitalizadas();
+			final String[] valores = new String[qnt];
+			final ArrayList<Imagem> imgs = (ArrayList<Imagem>) Sistema.getImagensDigitalizadas();
+			for(int i=0;i<qnt;i++){
+				valores[i] = i+"";
+			}
+			
+			lista = new JList();
+			lista.setModel(new AbstractListModel() {
+				String[] values = valores;
+			
+				public int getSize() {
+					return values.length;
+				}
+				public Object getElementAt(int index) {
+					return values[index];
+				}
+			});
+			lista.setValueIsAdjusting(true);
+			lista.addListSelectionListener(new ListSelectionListener() {
+				
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+					if(imgs.size()>0){
+						ImageIcon img = new ImageIcon(imgs.get(lista.getSelectedIndex()).getImagem());
+						img.setImage(img.getImage().getScaledInstance(478, 567, 500));
+						lblNenhumaImagemSelecionada.setText("");
+						lblNenhumaImagemSelecionada.setIcon(img);
+					
+					}
+				}
+			});
+		
+			lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			((JScrollPane) scrollPane_1).setViewportView(lista);
+
 			
 		}
 		

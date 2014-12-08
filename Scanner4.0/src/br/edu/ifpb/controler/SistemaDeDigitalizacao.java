@@ -17,17 +17,12 @@ public class SistemaDeDigitalizacao implements ScannerListener {
 	private SistemaDeDigitalizacao(){
 		
 	}
-	private void getDevice() throws NotGetDeviceException, ScannerIOException{
+	private void getDevice() throws  ScannerIOException{
 		Scanner scanner = null;
 		scanner = Scanner.getDevice();
-		if(scanner != null){
-
-
-			scanner.addListener(this);
-			this.scan = scanner;
-		}else{
-			throw new NotGetDeviceException();
-		}
+		scanner.addListener(this);
+		this.scan = scanner;
+		
 	}
 
 	@Override

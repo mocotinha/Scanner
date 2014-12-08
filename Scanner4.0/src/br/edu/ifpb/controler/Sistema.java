@@ -15,12 +15,9 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 //import ifpb.scanner.dao2.*;
 
+import javax.swing.JOptionPane;
 
-
-
-
-
-
+import uk.co.mmscomputing.device.twain.TwainFailureException;
 import br.edu.ifpb.dao.DAO;
 import br.edu.ifpb.dao.DAOAluno;
 import br.edu.ifpb.dao.DAOCurso;
@@ -30,6 +27,7 @@ import br.edu.ifpb.dao.DAOUsuario;
 import br.edu.ifpb.model.Aluno;
 import br.edu.ifpb.model.Curso;
 import br.edu.ifpb.model.DocumentoDigital;
+import br.edu.ifpb.model.Dossie;
 import br.edu.ifpb.model.Imagem;
 import br.edu.ifpb.model.Instituicao;
 import br.edu.ifpb.model.Usuario;
@@ -40,6 +38,8 @@ public class Sistema {
 	@SuppressWarnings("unused")
 	private static Usuario user;
 	private static Map<String, Object> dados = new HashMap<String,Object>();
+	private static List<Imagem> imgs = new ArrayList<Imagem>();
+	
 	
 	private Sistema() {}
 	
@@ -113,9 +113,11 @@ public class Sistema {
 			img.setResolucao(bf.getWidth()+"X"+bf.getHeight()+"wxh");
 			img.setTamanho(imageInByte.length);
 			return img;
+		}catch(TwainFailureException e){
+			JOptionPane.showMessageDialog(null,"Scanner não identificado");
 		} catch (IOException | NotGetDeviceException e) {
-		
-			System.out.println("Scanner não identificado!");
+			JOptionPane.showMessageDialog(null,"Erro no Scanner");
+			
 		}
 		return null;
 		
@@ -390,6 +392,58 @@ public class Sistema {
 		DAO.commit();
 		DAO.close();
 		
+	}
+
+
+	public static List<Usuario> getUsuariosPorNome(String text) {
+		DAOUsuario dao = new DAOUsuario();
+		List<Usuario> us = new ArrayList<Usuario>();
+		DAO.open();
+		DAO.begin();
+		us = dao.findByNome(text);
+		DAO.close();
+		return us;
+	}
+
+
+	public static void atualizaUsuario(Usuario us) {
+		DAOUsuario dao = new DAOUsuario();
+		DAO.open();
+		DAO.begin();
+		dao.merge(us);
+		DAO.commit();
+		DAO.close();
+		
+	}
+
+
+	public static void cadastroDossie() {
+		SistemaDeTelas.cadastroDossie();
+		Dossie dossie = new Dossie();
+		dossie.setAluno((Aluno) dados.get("aluno"));
+		dossie.setInstituicao((Instituicao) dados.get("instituicao"));
+		dossie.setCurso((Curso) dados.get("curso"));
+		dados.put("dossie", dossie);
+		SistemaDeTelas.cadastraDossie(dossie);
+		
+	}
+
+
+	public static void adicionaImagem(Imagem img) {
+		imgs.add(img);
+		
+	}
+
+
+	public static int getQntImagensDigitalizadas() {
+		
+		return imgs.size();
+	}
+
+
+	public static List<Imagem> getImagensDigitalizadas() {
+		
+		return imgs;
 	}
 
 

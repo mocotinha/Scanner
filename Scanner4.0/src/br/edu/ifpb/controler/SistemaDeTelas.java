@@ -8,7 +8,9 @@ import javax.swing.JOptionPane;
 
 import br.edu.ifpb.model.Aluno;
 import br.edu.ifpb.model.Curso;
+import br.edu.ifpb.model.Dossie;
 import br.edu.ifpb.model.Instituicao;
+import br.edu.ifpb.model.Usuario;
 import br.edu.ifpb.view.TelaBuscaAluno;
 import br.edu.ifpb.view.TelaBuscaCurso;
 import br.edu.ifpb.view.TelaBuscaDossie;
@@ -103,9 +105,12 @@ public class SistemaDeTelas {
 	}
 
 	public static void cadastroDossie() {
-		TelaCadastroDossie tcd = new TelaCadastroDossie(telas.get(TELA_PRINCIPAL));
-		tcd.setVisible(true);
-		
+		TelaBuscaInstituicao tbi = new TelaBuscaInstituicao(telas.get(TELA_PRINCIPAL));
+		tbi.setVisible(true);
+		TelaBuscaCurso tbc = new TelaBuscaCurso(telas.get(TELA_PRINCIPAL));
+		tbc.setVisible(true);
+		TelaBuscaAluno tba = new TelaBuscaAluno(telas.get(TELA_PRINCIPAL));
+		tba.setVisible(true);		
 	}
 
 	public static void listaDossie() {
@@ -143,6 +148,18 @@ public class SistemaDeTelas {
 	public static void cadastroInstituicao(Instituicao instituicao) {
 		TelaCadastroInstituicao tci = new TelaCadastroInstituicao(telas.get(TELA_PRINCIPAL),instituicao);
 		tci.setVisible(true);
+		
+	}
+
+	public static void cadastraUsuario(Usuario usuario) {
+		TelaCadastroUsuario tcu = new TelaCadastroUsuario(telas.get(TELA_PRINCIPAL),usuario);
+		tcu.setVisible(true);
+		
+	}
+
+	public static void cadastraDossie(Dossie dossie) {
+		TelaCadastroDossie tcd = new TelaCadastroDossie(telas.get(TELA_PRINCIPAL),dossie);
+		tcd.setVisible(true);
 		
 	}
 	

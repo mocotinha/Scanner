@@ -13,6 +13,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 
+import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.controler.SistemaDeTelas;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -214,7 +215,7 @@ public class TelaPrincipal extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			SistemaDeTelas.cadastroDossie();
+			Sistema.cadastroDossie();
 			
 		}
 		

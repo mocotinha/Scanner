@@ -13,6 +13,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import br.edu.ifpb.controler.Sistema;
+import br.edu.ifpb.controler.SistemaDeTelas;
 import br.edu.ifpb.model.table.UsuarioTableModel;
 
 @SuppressWarnings("serial")
@@ -56,6 +57,7 @@ public class TelaBuscaUsuario extends JDialog {
 		
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.setBounds(655, 16, 98, 26);
+		btnBuscar.addActionListener(new BuscarListener());
 		getContentPane().add(btnBuscar);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -66,10 +68,6 @@ public class TelaBuscaUsuario extends JDialog {
 		table = new JTable(new UsuarioTableModel(Sistema.getUsuarios()));
 		scrollPane.setViewportView(table);
 		
-		JButton btnSelecionar = new JButton("Selecionar");
-		btnSelecionar.setBounds(48, 230, 98, 26);
-		btnSelecionar.addActionListener(new SelecionarListener());
-		getContentPane().add(btnSelecionar);
 		
 		JButton btnEditar = new JButton("Editar");
 		btnEditar.setBounds(305, 230, 98, 26);
@@ -83,21 +81,23 @@ public class TelaBuscaUsuario extends JDialog {
 
 	}
 	
-	private class SelecionarListener implements ActionListener{
+	private class BuscarListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			table.setModel(new UsuarioTableModel(Sistema.getUsuariosPorNome(textField.getText())));
 			
 		}
 		
 	}
 	
+	
 	private class EditarListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			SistemaDeTelas.cadastraUsuario(((UsuarioTableModel)table.getModel()).get(table.getSelectedRow()));
+			table.setModel(new UsuarioTableModel(Sistema.getUsuarios()));
 			
 		}
 		
@@ -107,7 +107,7 @@ public class TelaBuscaUsuario extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			dispose();
 			
 		}
 		
