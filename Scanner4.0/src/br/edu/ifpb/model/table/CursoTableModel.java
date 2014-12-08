@@ -14,7 +14,7 @@ public class CursoTableModel extends AbstractTableModel {
     private static final int COL_NIVEL = 1;
     private static final int COL_ANOINICIO = 2;
     private static final int COL_ANOFIM = 3;
-    private static final int COL_SITUACAO = 4;
+
  
     
     private List<Curso> valores;
@@ -25,7 +25,7 @@ public class CursoTableModel extends AbstractTableModel {
     
 	@Override
 	public int getColumnCount() {
-		return 5;
+		return 4;
 		
 	}
 
@@ -41,7 +41,6 @@ public class CursoTableModel extends AbstractTableModel {
         if (column == COL_NIVEL) return "Nivel";
         if (column == COL_ANOINICIO) return "Ano Inicio";
         if (column == COL_ANOFIM) return "Ano Fim";
-        if (column == COL_SITUACAO) return "Situação";
         
         
         return "";   
@@ -54,7 +53,6 @@ public class CursoTableModel extends AbstractTableModel {
          else if (column == COL_NIVEL) return mod.getNivel();
          else if (column == COL_ANOINICIO) return mod.getAnoInicio();
          else if (column == COL_ANOFIM) return mod.getAnoFim();
-         else if (column == COL_SITUACAO) return mod.getSituacao();
       
          return "";  
      }

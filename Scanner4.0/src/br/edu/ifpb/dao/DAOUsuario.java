@@ -18,9 +18,4 @@ public class DAOUsuario extends DAO<Usuario> {
 		}
 		
 	}
-
-	public void persistOrMerge(Usuario user){
-		
-		
-	}
 }

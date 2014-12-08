@@ -7,14 +7,15 @@ import br.edu.ifpb.model.Usuario;
 
 public class Application {
 	public static void main(String[] args) {
-		Sistema sys = new Sistema();
-		sys.iniciaTelas();
-		//cadastraUser();
-		sys.main();
+		Sistema sys = Sistema.getInstance();
+//		cadastraUser();
+		sys.iniciar();
+		
 		
 		
 	}
 
+	@SuppressWarnings("unused")
 	private static void cadastraUser() {
 		DAOUsuario dao = new DAOUsuario();
 		DAO.open();

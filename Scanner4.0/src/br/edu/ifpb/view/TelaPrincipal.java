@@ -13,11 +13,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 
+import br.edu.ifpb.controler.SistemaDeTelas;
+
 import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 
 public class TelaPrincipal extends JFrame {
 
@@ -57,8 +57,10 @@ public class TelaPrincipal extends JFrame {
 		String coluna = "pref:grow,left:pref:grow";
 		
 		FormLayout form = new FormLayout(coluna,linha);
-		FormDebugPanel formDebugPanel = new FormDebugPanel();
-		PanelBuilder pb = new PanelBuilder(form,formDebugPanel);
+	/*	FormDebugPanel formDebugPanel = new FormDebugPanel();
+		PanelBuilder pb = new PanelBuilder(form,formDebugPanel);*/
+		
+		PanelBuilder pb = new PanelBuilder(form);
 		
 		JMenu jmAluno = new JMenu("Aluno");
 		JMenuItem cadAlunoItem = new JMenuItem("Cadastro de Aluno");
@@ -85,11 +87,11 @@ public class TelaPrincipal extends JFrame {
 		jmInst.add(cadInstItem);
 		jmInst.add(listaInstItem);
 		
-		JMenu jmDocumentos = new JMenu("Documentos");
-		final JMenuItem cadDoc = new JMenuItem("Cadastrar Documento");
-		cadDoc.addActionListener(new CadastroDocumentoListener());
-		JMenuItem busDoc = new JMenuItem("Buscar Documentos");
-		busDoc.addActionListener(new ListaDocumentoListener());
+		JMenu jmDocumentos = new JMenu("Dossiê");
+		final JMenuItem cadDoc = new JMenuItem("Cadastrar Dossiê");
+		cadDoc.addActionListener(new CadastroDossieListener());
+		JMenuItem busDoc = new JMenuItem("Buscar Dossiê");
+		busDoc.addActionListener(new ListaDossieListener());
 		jmDocumentos.add(cadDoc);
 		jmDocumentos.add(busDoc);
 		
@@ -98,7 +100,7 @@ public class TelaPrincipal extends JFrame {
 		JMenuItem cadUsu = new JMenuItem("Cadastrar Usuario");
 		cadUsu.addActionListener(new CadastroUsuarioListener());
 		JMenuItem gerUsu = new JMenuItem("Gerenciar Usuarios");
-		gerUsu.addActionListener(new GerenciarUsuarioListener());
+		gerUsu.addActionListener(new ListarUsuarioListener());
 		jm2.add(cadUsu);
 		jm2.add(gerUsu);
 		
@@ -154,7 +156,7 @@ public class TelaPrincipal extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Abre tela de cadastro de Usuarios
+			SistemaDeTelas.cadastroAluno();
 			
 		}
 		
@@ -164,7 +166,7 @@ public class TelaPrincipal extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Abre tela de cadastro de Curso
+			SistemaDeTelas.cadastroCurso();
 			
 		}
 	}
@@ -173,7 +175,7 @@ public class TelaPrincipal extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Abre tela de cadastro de Instituicao
+			SistemaDeTelas.cadastroInstituicao();
 		}
 		
 	}
@@ -182,7 +184,7 @@ public class TelaPrincipal extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Abre Tela de alunos
+			SistemaDeTelas.listaAlunos();
 			
 		}
 		
@@ -192,7 +194,7 @@ public class TelaPrincipal extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Abre tela Curso
+			SistemaDeTelas.listaCursos();
 			
 		}
 		
@@ -202,27 +204,27 @@ public class TelaPrincipal extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Abre tela Instituicao
+			SistemaDeTelas.listaInstituicao();
 			
 		}
 		
 	}
 	
-	private class CadastroDocumentoListener implements ActionListener{
+	private class CadastroDossieListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			SistemaDeTelas.cadastroDossie();
 			
 		}
 		
 	}
 	
-	private class ListaDocumentoListener implements ActionListener{
+	private class ListaDossieListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Abre tela Documento
+			SistemaDeTelas.listaDossie();
 			
 		}
 		
@@ -232,18 +234,18 @@ public class TelaPrincipal extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			SistemaDeTelas.cadastroUsuario();
 			
 		}
 		
 	}
 
 
-	private class GerenciarUsuarioListener implements ActionListener{
+	private class ListarUsuarioListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			SistemaDeTelas.listaUsuarios();
 			
 		}
 		
@@ -253,7 +255,7 @@ public class TelaPrincipal extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			SistemaDeTelas.sair();
 			
 		}
 		

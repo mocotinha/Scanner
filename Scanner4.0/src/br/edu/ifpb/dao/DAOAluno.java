@@ -13,7 +13,7 @@ public class DAOAluno extends DAO<Aluno>{
 	@SuppressWarnings("unchecked")
 	public List<Aluno> findByNome(String texto) {
 		
-		Query q = getManager().createQuery("select distinct a from Aluno a   where a.nome like '"+texto+"%'" );
+		Query q = getManager().createQuery("select distinct a from Aluno a where a.nome like '"+texto+"%'" );
 		return q.getResultList();
 		
 		

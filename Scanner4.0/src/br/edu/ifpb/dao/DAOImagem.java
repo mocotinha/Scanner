@@ -9,9 +9,10 @@ public class DAOImagem extends DAO<Imagem>{
 	
 	public Long qntRegistros(int id){
 		//TODO Refazer essa query
+		@SuppressWarnings("unused")
 		Query q = getManager().createQuery("select count(i) from Imagem i where i.doc.id = "+id);
 		
 		
-		return (Long) q.getSingleResult();
+		return (long) 0;
 	}
 }

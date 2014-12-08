@@ -21,7 +21,6 @@ import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.controler.SistemaDeTelas;
 
 import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -79,8 +78,11 @@ public class TelaLogin extends JFrame {
 		String coluna = "fill:pref:grow,right:pref,center:8dlu,90dlu,80dlu,fill:pref:grow";
 		FormLayout form = new FormLayout(coluna,linha);
 		
-		FormDebugPanel formDebugPanel = new FormDebugPanel();
-		PanelBuilder pb = new PanelBuilder(form,formDebugPanel);
+/*		Utilizado pelo Jgoodies para mostrar na tela linhas vermelhas em torno das colunas e linhas para facilitar a depuração
+ *      FormDebugPanel formDebugPanel = new FormDebugPanel();
+ *	    PanelBuilder pb = new PanelBuilder(form,formDebugPanel);
+*/		
+		PanelBuilder pb = new PanelBuilder(form);
 		
 		JLabel logo = new JLabel("");
 		logo.setIcon(new ImageIcon(TelaLogin.class.getResource("/images/icon/logo.png")));
@@ -114,22 +116,7 @@ public class TelaLogin extends JFrame {
 			}
 		});
 		
-		btnLogin.addActionListener(new ActionListener() {
-			
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(Sistema.login(login.getText(),password.getPassword())){
-					//TODO Tela Seguinte: 
-					SistemaDeTelas.proximaTela(classe());
-					limpar();
-				}else{
-					info.setForeground(Color.RED);
-					info.setText("Login e/ou senha inválidos");
-				}
-				
-			}
-		});
+		btnLogin.addActionListener(new LoginListener());
 		
 		
 		getContentPane().add(pb.getPanel());
@@ -153,8 +140,32 @@ public class TelaLogin extends JFrame {
 			  e.printStackTrace();
 		  }
 	}
-	
-	private JFrame classe(){
+	private JFrame classe() {
+		
 		return this;
 	}
+	
+	private class LoginListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+					if(Sistema.login(login.getText(),password.getPassword())){
+						
+						SistemaDeTelas.proximaTela(classe());
+						limpar();
+					}else{
+						info.setForeground(Color.RED);
+						info.setText("Login e/ou senha inválidos");
+					}
+					
+				
+			
+		}
+
+		
+		
+	}
+	
+
 }
