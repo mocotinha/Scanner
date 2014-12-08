@@ -20,7 +20,7 @@ public class Curso{
 	private String nivel;
 	private String anoInicio;
 	private String anoFim;
-	private String situacao;
+	
 	@ManyToOne
 	private Instituicao instituicao;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="curso")
@@ -80,14 +80,7 @@ public class Curso{
 	}
 
 
-	public String getSituacao() {
-		return situacao;
-	}
 
-
-	public void setSituacao(String situacao) {
-		this.situacao = situacao;
-	}
 
 
 	public Instituicao getInstituicao() {
