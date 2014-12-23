@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 //import ifpb.scanner.dao2.*;
-
 import javax.swing.JOptionPane;
 
 import uk.co.mmscomputing.device.twain.TwainFailureException;
@@ -25,7 +24,9 @@ import br.edu.ifpb.dao.DAODocumentoDigital;
 import br.edu.ifpb.dao.DAOInstituicao;
 import br.edu.ifpb.dao.DAOUsuario;
 import br.edu.ifpb.model.Aluno;
+import br.edu.ifpb.model.AlunoExistenteException;
 import br.edu.ifpb.model.Curso;
+import br.edu.ifpb.model.CursoExistenteException;
 import br.edu.ifpb.model.DocumentoDigital;
 import br.edu.ifpb.model.Dossie;
 import br.edu.ifpb.model.Imagem;
@@ -58,7 +59,7 @@ public class Sistema {
 	}
 	
 	public static String md5(String senha){  
-		 MessageDigest md = null;
+		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("MD5");
 		} catch (NoSuchAlgorithmException e) {
@@ -232,7 +233,10 @@ public class Sistema {
 
 
 	public static void cadastraAluno(String nome, String matricula,String dataNascimento, String rg,
-			String cpf, String mae, String pai) {
+			String cpf, String mae, String pai) throws Exception {
+		DAOAluno dao = new DAOAluno();
+		DAO.open();
+		DAO.begin();
 		Aluno aluno = new Aluno();
 		aluno.setNome(nome);
 		aluno.setMatricula(matricula);
@@ -241,35 +245,42 @@ public class Sistema {
 		aluno.setMae(mae);
 		aluno.setPai(pai);
 		aluno.setDataNascimento(dataNascimento);
+		Aluno aux;
+		try{
+			aux = dao.findByMatricula(matricula);
+		}catch(Exception e){
+			dao.persist(aluno);
+			DAO.commit();
+			DAO.close();
+			return;
+			
+		}
 		
-		//TODO verificar se o aluno já existe
-		
-		DAOAluno dao = new DAOAluno();
-		DAO.open();
-		DAO.begin();
-		dao.persist(aluno);
-		DAO.commit();
-		DAO.close();
-		
+		throw new AlunoExistenteException("Erro: Aluno já existe na base de dados!\nCom nome: "+aux.getNome()+"\nNumero de Registro: "+ aux.getId());	
 	}
 
 
-	public static void cadastraCurso(String nome, String nivel, String anoCriacao,
-			String anoFim) {
+	public static void cadastraCurso(String nome, String nivel) throws CursoExistenteException {
 		Curso cur = new Curso();
 		cur.setNome(nome);
 		cur.setNivel(nivel);
-		cur.setAnoInicio(anoCriacao);
-		cur.setAnoFim(anoFim);
-		
-		//TODO verificar se o curso já existe
-		
 		DAOCurso dao = new DAOCurso();
 		DAO.open();
-		DAO.begin();
-		dao.persist(cur);
-		DAO.commit();
-		DAO.close();
+		DAO.begin();  
+		Curso aux;
+		try{
+			aux = (Curso) dao.findByNomeSingle(nome);
+		}catch(Exception e){
+			dao.persist(cur);
+			DAO.commit();
+			DAO.close();
+			return;
+			
+		}
+		throw new CursoExistenteException("Erro: Curso existente\nNumero de Registro: "+aux.getId());
+		
+		
+		
 		
 	}
 

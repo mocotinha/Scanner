@@ -12,8 +12,7 @@ public class CursoTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 1L;
 	private static final int COL_NOME = 0;  
     private static final int COL_NIVEL = 1;
-    private static final int COL_ANOINICIO = 2;
-    private static final int COL_ANOFIM = 3;
+
 
  
     
@@ -25,7 +24,7 @@ public class CursoTableModel extends AbstractTableModel {
     
 	@Override
 	public int getColumnCount() {
-		return 4;
+		return 2;
 		
 	}
 
@@ -39,8 +38,7 @@ public class CursoTableModel extends AbstractTableModel {
         
         if (column == COL_NOME) return "Nome";  
         if (column == COL_NIVEL) return "Nivel";
-        if (column == COL_ANOINICIO) return "Ano Inicio";
-        if (column == COL_ANOFIM) return "Ano Fim";
+
         
         
         return "";   
@@ -51,8 +49,7 @@ public class CursoTableModel extends AbstractTableModel {
 		 Curso mod = valores.get(row);  
          if (column == COL_NOME) return mod.getNome();  
          else if (column == COL_NIVEL) return mod.getNivel();
-         else if (column == COL_ANOINICIO) return mod.getAnoInicio();
-         else if (column == COL_ANOFIM) return mod.getAnoFim();
+
       
          return "";  
      }

@@ -19,5 +19,12 @@ public class DAOAluno extends DAO<Aluno>{
 		
 	}
 
+	public Aluno findByMatricula(String matricula) {
+		Query q = getManager().createQuery("select a from Aluno a where a.matricula like :matricula" );
+		q.setParameter("matricula", matricula);
+		return (Aluno) q.getSingleResult();
+		
+	}
+
 
 }

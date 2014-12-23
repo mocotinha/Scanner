@@ -17,6 +17,7 @@ import javax.swing.text.MaskFormatter;
 
 import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.model.Aluno;
+import br.edu.ifpb.model.AlunoExistenteException;
 
 @SuppressWarnings("serial")
 public class TelaCadastroAluno extends JDialog {
@@ -292,6 +293,8 @@ public class TelaCadastroAluno extends JDialog {
 				Sistema.cadastraAluno(nome.getText(),matricula.getText(),dataNascimento.getText(),rg.getText(),cpf.getText(),mae.getText(),pai.getText());
 				JOptionPane.showMessageDialog(classe(), "Aluno Cadastrado Com Sucesso");
 				limpar();
+			}catch (AlunoExistenteException e2) {
+				JOptionPane.showMessageDialog(classe(), e2.getMessage());
 			}catch (Exception ex){
 				JOptionPane.showMessageDialog(classe(), "Erro ao Cadastrar o Aluno");
 			}

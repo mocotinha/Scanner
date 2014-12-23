@@ -18,8 +18,7 @@ public class Curso{
 	private int id;
 	private String nome;
 	private String nivel;
-	private String anoInicio;
-	private String anoFim;
+	
 	
 	@ManyToOne
 	private Instituicao instituicao;
@@ -58,30 +57,6 @@ public class Curso{
 	public void setNivel(String nivel) {
 		this.nivel = nivel;
 	}
-
-
-	public String getAnoInicio() {
-		return anoInicio;
-	}
-
-
-	public void setAnoInicio(String anoInicio) {
-		this.anoInicio = anoInicio;
-	}
-
-
-	public String getAnoFim() {
-		return anoFim;
-	}
-
-
-	public void setAnoFim(String anoFim) {
-		this.anoFim = anoFim;
-	}
-
-
-
-
 
 	public Instituicao getInstituicao() {
 		return instituicao;

@@ -3,21 +3,19 @@ package br.edu.ifpb.view;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.MaskFormatter;
 
 import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.model.Curso;
+import br.edu.ifpb.model.CursoExistenteException;
 
 @SuppressWarnings("serial")
 public class TelaCadastroCurso extends JDialog {
@@ -25,8 +23,6 @@ public class TelaCadastroCurso extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField nome;
 	private JTextField nivel;
-	private JFormattedTextField anoCriacao;
-	private JFormattedTextField anoFim;
 	private Curso curso;
 
 	/**
@@ -44,6 +40,7 @@ public class TelaCadastroCurso extends JDialog {
 
 	/**
 	 * Create the dialog.
+	 * @wbp.parser.constructor
 	 */
 	public TelaCadastroCurso(JFrame telaPrincipal) {
 		
@@ -88,32 +85,8 @@ public class TelaCadastroCurso extends JDialog {
 		contentPanel.add(nivel);
 		nivel.setColumns(10);
 		
-		JLabel lblAnoCriao = new JLabel("Ano Cria\u00E7\u00E3o:");
-		lblAnoCriao.setBounds(33, 154, 83, 14);
-		contentPanel.add(lblAnoCriao);
 		
 		
-		try {
-			anoCriacao = new JFormattedTextField(new MaskFormatter("####"));
-			anoCriacao.setBounds(141, 151, 73, 20);
-			contentPanel.add(anoCriacao);
-			
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(this, "Ano Criação Inválido deve seguir o modelo AAAA. EX:2014");
-		}
-		
-		JLabel lblAnoFinalizao = new JLabel("Ano Finaliza\u00E7\u00E3o:");
-		lblAnoFinalizao.setBounds(257, 154, 99, 14);
-		contentPanel.add(lblAnoFinalizao);
-		
-	
-		try {
-			anoFim = new JFormattedTextField(new MaskFormatter("####"));
-			anoFim.setBounds(366, 151, 73, 23);
-			contentPanel.add(anoFim);
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(this, "Ano Fim Inválido deve seguir o modelo AAAA. EX:2014");
-		}	
 	}
 	
 	public TelaCadastroCurso(JFrame telaPrincipal,Curso curso) {
@@ -166,29 +139,13 @@ public class TelaCadastroCurso extends JDialog {
 		contentPanel.add(lblAnoCriao);
 		
 		
-		try {
-			anoCriacao = new JFormattedTextField(new MaskFormatter("####"));
-			anoCriacao.setText(curso.getAnoInicio());
-			anoCriacao.setBounds(141, 151, 73, 20);
-			contentPanel.add(anoCriacao);
-			
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(this, "Ano Criação Inválido deve seguir o modelo AAAA. EX:2014");
-		}
 		
 		JLabel lblAnoFinalizao = new JLabel("Ano Finaliza\u00E7\u00E3o:");
 		lblAnoFinalizao.setBounds(257, 154, 99, 14);
 		contentPanel.add(lblAnoFinalizao);
 		
 	
-		try {
-			anoFim = new JFormattedTextField(new MaskFormatter("####"));
-			anoFim.setBounds(366, 151, 73, 23);
-			anoFim.setText(curso.getAnoFim());
-			contentPanel.add(anoFim);
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(this, "Ano Fim Inválido deve seguir o modelo AAAA. EX:2014");
-		}
+		
 		
 		
 	}
@@ -202,8 +159,7 @@ public class TelaCadastroCurso extends JDialog {
 	private void limpar(){
 		nome.setText("");
 		nivel.setText("");
-		anoCriacao.setText("");
-		anoFim.setText("");
+		
 	}
 	
 	private class AtualizarListener implements ActionListener{
@@ -213,8 +169,6 @@ public class TelaCadastroCurso extends JDialog {
 			try{
 				curso.setNome(nome.getText());
 				curso.setNivel(nivel.getText());
-				curso.setAnoInicio(anoCriacao.getText());
-				curso.setAnoFim(anoFim.getText());
 				Sistema.atualizaCurso(curso);
 				JOptionPane.showMessageDialog(classe(), "Curso Atualizado com Sucesso!");
 				dispose();
@@ -233,10 +187,13 @@ public class TelaCadastroCurso extends JDialog {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try{
-				Sistema.cadastraCurso(nome.getText(),nivel.getText(),anoCriacao.getText(), anoFim.getText());
+				Sistema.cadastraCurso(nome.getText(),nivel.getText());
 				JOptionPane.showMessageDialog(classe(), "Curso Cadastrado Com Sucesso");
 				limpar();
+			}catch(CursoExistenteException e1){
+				JOptionPane.showMessageDialog(classe(), e1.getMessage());
 			}catch (Exception ex){
+				ex.printStackTrace();
 				JOptionPane.showMessageDialog(classe(), "Erro ao Cadastrar o Curso");
 			}
 			
