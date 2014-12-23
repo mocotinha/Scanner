@@ -21,6 +21,7 @@ import br.edu.ifpb.dao.DAO;
 import br.edu.ifpb.dao.DAOAluno;
 import br.edu.ifpb.dao.DAOCurso;
 import br.edu.ifpb.dao.DAODocumentoDigital;
+import br.edu.ifpb.dao.DAODossie;
 import br.edu.ifpb.dao.DAOInstituicao;
 import br.edu.ifpb.dao.DAOUsuario;
 import br.edu.ifpb.model.Aluno;
@@ -31,7 +32,9 @@ import br.edu.ifpb.model.DocumentoDigital;
 import br.edu.ifpb.model.Dossie;
 import br.edu.ifpb.model.Imagem;
 import br.edu.ifpb.model.Instituicao;
+import br.edu.ifpb.model.InstituicaoExistenteException;
 import br.edu.ifpb.model.Usuario;
+import br.edu.ifpb.model.UsuarioExistenteException;
 
 public class Sistema {
 	
@@ -48,6 +51,10 @@ public class Sistema {
 	public static void iniciarTelas(){
 		SistemaDeTelas sdt = SistemaDeTelas.getInstance();
 		sdt.iniciaTelas();
+		setDados("aluno", null);
+		setDados("curso", null);
+		setDados("instituicao", null);
+		
 	}
 	
 	public static void setDados(String chave,Object valor){
@@ -250,73 +257,86 @@ public class Sistema {
 			aux = dao.findByMatricula(matricula);
 		}catch(Exception e){
 			dao.persist(aluno);
+			DAO.flush();
 			DAO.commit();
 			DAO.close();
 			return;
 			
 		}
-		
+		DAO.close();
 		throw new AlunoExistenteException("Erro: Aluno já existe na base de dados!\nCom nome: "+aux.getNome()+"\nNumero de Registro: "+ aux.getId());	
 	}
 
 
-	public static void cadastraCurso(String nome, String nivel) throws CursoExistenteException {
+	public static void cadastraCurso(String nome, String nivel, String instituicao) throws CursoExistenteException {
 		Curso cur = new Curso();
 		cur.setNome(nome);
 		cur.setNivel(nivel);
 		DAOCurso dao = new DAOCurso();
+		DAOInstituicao daoI = new DAOInstituicao();
 		DAO.open();
 		DAO.begin();  
+		cur.setInstituicao(daoI.findPorNome(instituicao));
 		Curso aux;
 		try{
-			aux = (Curso) dao.findByNomeSingle(nome);
+			aux = dao.findByNomeSingle(nome);
 		}catch(Exception e){
 			dao.persist(cur);
+			DAO.flush();
 			DAO.commit();
 			DAO.close();
-			return;
-			
+			return;	
 		}
-		throw new CursoExistenteException("Erro: Curso existente\nNumero de Registro: "+aux.getId());
-		
-		
-		
-		
+		DAO.close();
+		throw new CursoExistenteException("Erro: Curso existente\nNumero de Registro: "+aux.getId());	
 	}
 
-
-	public static void cadastraInstituicao(String nome) {
+	public static void cadastraInstituicao(String nome) throws InstituicaoExistenteException {
 		Instituicao inst = new Instituicao();
 		inst.setNome(nome);
-		
-		
-		//TODO verificar se institção já existe
-		
 		DAOInstituicao dao = new DAOInstituicao();
 		DAO.open();
 		DAO.begin();
-		dao.persist(inst);
-		DAO.commit();
+		Instituicao aux;
+		try{
+			aux = dao.findPorNome(nome);
+		}catch(Exception e){
+			dao.persist(inst);
+			DAO.flush();
+			DAO.commit();
+			DAO.close();
+			return;	
+		}
+		
 		DAO.close();
+		throw new InstituicaoExistenteException("Erro: Instituição existente\nNumero de Registro: "+aux.getId());
 		
 	}
 
 
-	public static void cadastraUsuario(String nome, String login, String pass, int tipo) {
+	public static void cadastraUsuario(String nome, String login, String pass, int tipo) throws UsuarioExistenteException {
 		Usuario us = new Usuario();
 		us.setNome(nome);
 		us.setLogin(login);
 		us.setSenha(md5(pass));
 		us.setTipo(tipo);
-		
-		//TODO verificar se o usuario já existe
-		
 		DAOUsuario dao = new DAOUsuario();
 		DAO.open();
 		DAO.begin();
-		dao.persist(us);
-		DAO.commit();
+		Usuario aux;
+		try{
+			aux = dao.findByLogin(login);
+		}catch(Exception e){
+			dao.persist(us);
+			DAO.flush();
+			DAO.commit();
+			DAO.close();
+			return;	
+		}
+		
 		DAO.close();
+		throw new UsuarioExistenteException("Erro: Usuário existente\nNumero de Registro: "+aux.getId());
+		
 		
 	}
 
@@ -429,13 +449,53 @@ public class Sistema {
 
 
 	public static void cadastroDossie() {
+		limpaRegistroDossie();
 		SistemaDeTelas.cadastroDossie();
 		Dossie dossie = new Dossie();
+		if(dados.get("aluno") == null){
+			JOptionPane.showMessageDialog(null, "Você Não Selecionou um Aluno");
+			return;
+		}
+		
+		if(dados.get("instituicao") == null){
+			JOptionPane.showMessageDialog(null, "Você Não Selecionou uma Instituição");
+			return;
+		}
+		
+		if(dados.get("curso") == null){
+			JOptionPane.showMessageDialog(null, "Você Não Selecionou um Curso");
+			return;
+		}
+		
 		dossie.setAluno((Aluno) dados.get("aluno"));
 		dossie.setInstituicao((Instituicao) dados.get("instituicao"));
 		dossie.setCurso((Curso) dados.get("curso"));
-		dados.put("dossie", dossie);
-		SistemaDeTelas.cadastraDossie(dossie);
+//		dados.put("dossie", dossie);
+		limpaRegistroDossie();
+		DAODossie dao = new DAODossie();
+		DAO.open();
+		DAO.begin();
+		Dossie aux;
+		try{
+			aux = dao.findBySelecionados(dossie.getAluno().getId(),dossie.getInstituicao().getId(), dossie.getCurso().getId());
+		}catch(Exception e){
+			dao.persist(dossie);
+			aux = dossie;
+		}
+		DAO.flush();
+		DAO.commit();
+		DAO.close();
+		
+		SistemaDeTelas.cadastraDossie(aux);
+		
+		
+	}
+
+
+	private static void limpaRegistroDossie() {
+		dados.put("aluno", null);
+		dados.put("instituicao", null);
+		dados.put("curso", null);
 		
 	}
 
@@ -455,6 +515,17 @@ public class Sistema {
 	public static List<Imagem> getImagensDigitalizadas() {
 		
 		return imgs;
+	}
+
+
+	public static String[] getNomeDasInstituicao() {
+		List<Instituicao> aux = getInstituicoes();
+		String [] aux2 = new String [aux.size()];
+		for(int i=0; i < aux.size();i++){
+			aux2[i] = aux.get(i).getNome();
+		}
+		
+		return aux2;
 	}
 
 

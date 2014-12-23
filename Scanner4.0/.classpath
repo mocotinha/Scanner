@@ -7,7 +7,7 @@
 	<classpathentry kind="lib" path="JarsImportados/db4o-8.1.249.16099-core-java5.jar"/>
 	<classpathentry kind="lib" path="JarsImportados/db4o-8.1.249.16099-instrumentation-java5.jar"/>
 	<classpathentry kind="lib" path="JarsImportados/db4o-8.1.249.16099-nqopt-java5.jar"/>
-	<classpathentry kind="lib" path="JarsImportados/eclipselink.jar"/>
+	<classpathentry kind="lib" path="JarsImportados/eclipselink.jar" sourcepath="C:/Users/Alex/.m2/repository/org/eclipse/persistence/eclipselink/2.5.1-RC3/eclipselink-2.5.1-RC3-sources.jar"/>
 	<classpathentry kind="lib" path="JarsImportados/javax.persistence_2.1.0.v201304241213.jar"/>
 	<classpathentry kind="lib" path="JarsImportados/jgoodies-binding-2.9.1.jar"/>
 	<classpathentry kind="lib" path="JarsImportados/jgoodies-common-1.7.0.jar"/>
@@ -21,5 +21,9 @@
 	<classpathentry kind="lib" path="JarsImportados/slf4j-simple-1.7.7.jar"/>
 	<classpathentry kind="lib" path="JarsImportados/uk.co.mmscomputing.device.twain.jar"/>
 	<classpathentry kind="lib" path="JarsImportados/xswingx.jar"/>
+	<classpathentry kind="lib" path="E:/eclipse-java-luna-SR1-win32/eclipse/Lib/Jcalendar/lib/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="E:/eclipse-java-luna-SR1-win32/eclipse/Lib/Jcalendar/lib/jgoodies-common-1.2.0.jar"/>
+	<classpathentry kind="lib" path="E:/eclipse-java-luna-SR1-win32/eclipse/Lib/Jcalendar/lib/jgoodies-looks-2.4.1.jar"/>
+	<classpathentry kind="lib" path="E:/eclipse-java-luna-SR1-win32/eclipse/Lib/Jcalendar/lib/junit-4.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

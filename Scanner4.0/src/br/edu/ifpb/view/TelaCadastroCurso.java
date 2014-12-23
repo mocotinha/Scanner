@@ -4,7 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +26,8 @@ public class TelaCadastroCurso extends JDialog {
 	private JTextField nome;
 	private JTextField nivel;
 	private Curso curso;
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboBox;
 
 	/**
 	 * Launch the application.
@@ -42,6 +46,7 @@ public class TelaCadastroCurso extends JDialog {
 	 * Create the dialog.
 	 * @wbp.parser.constructor
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public TelaCadastroCurso(JFrame telaPrincipal) {
 		
 		super(telaPrincipal,"Cadastro de Curso",true);
@@ -51,44 +56,56 @@ public class TelaCadastroCurso extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		
 		
-		JButton btnCadastrar = new JButton("Cadastrar");
+		JButton btnCadastrar = new JButton("Salvar");
 		btnCadastrar.setBounds(44, 325, 121, 23);
 		btnCadastrar.addActionListener(new CadastrarListener());
 		contentPanel.setLayout(null);
 		contentPanel.add(btnCadastrar);
 		
-		JButton btnLimparDados = new JButton("Limpar Dados");
+		JButton btnLimparDados = new JButton("Novo");
 		btnLimparDados.setBounds(204, 325, 152, 23);
 		btnLimparDados.addActionListener(new LimparListener());
 		contentPanel.add(btnLimparDados);
 		
-		JButton btnConcluir = new JButton("Concluir");
+		JButton btnConcluir = new JButton("Cancelar");
 		btnConcluir.setBounds(404, 325, 99, 23);
 		btnConcluir.addActionListener(new ConcluidoListener());
 		contentPanel.add(btnConcluir);
 		
 		JLabel lblNome = new JLabel("Nome:");
-		lblNome.setBounds(33, 39, 46, 14);
+		lblNome.setBounds(33, 130, 46, 14);
 		contentPanel.add(lblNome);
 		
 		nome = new JTextField();
-		nome.setBounds(141, 36, 351, 20);
+		nome.setBounds(141, 127, 351, 20);
+		nome.setDocument(new LimitarMaiusculas());
 		contentPanel.add(nome);
 		nome.setColumns(10);
 		
 		JLabel lblNvel = new JLabel("N\u00EDvel:");
-		lblNvel.setBounds(33, 96, 46, 14);
+		lblNvel.setBounds(33, 187, 46, 14);
 		contentPanel.add(lblNvel);
 		
 		nivel = new JTextField();
-		nivel.setBounds(141, 93, 351, 20);
+		nivel.setBounds(141, 184, 351, 20);
+		nivel.setDocument(new LimitarMaiusculas());
 		contentPanel.add(nivel);
 		nivel.setColumns(10);
+		
+	
+		comboBox = new JComboBox(new DefaultComboBoxModel(Sistema.getNomeDasInstituicao()));
+		comboBox.setBounds(141, 75, 351, 22);
+		contentPanel.add(comboBox);
+		
+		JLabel lblInstituio = new JLabel("Institui\u00E7\u00E3o:");
+		lblInstituio.setBounds(33, 79, 82, 14);
+		contentPanel.add(lblInstituio);
 		
 		
 		
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public TelaCadastroCurso(JFrame telaPrincipal,Curso curso) {
 		super(telaPrincipal,"Cadastro de Curso",true);
 		this.curso = curso;
@@ -98,51 +115,58 @@ public class TelaCadastroCurso extends JDialog {
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		
 		
-		JButton btnCadastrar = new JButton("Atualizar");
+		JButton btnCadastrar = new JButton("Salvar");
 		btnCadastrar.setBounds(44, 325, 121, 23);
 		btnCadastrar.addActionListener(new AtualizarListener());
 		contentPanel.setLayout(null);
 		contentPanel.add(btnCadastrar);
 		
-		JButton btnLimparDados = new JButton("Limpar Dados");
+		JButton btnLimparDados = new JButton("Novo");
 		btnLimparDados.setBounds(204, 325, 152, 23);
 		btnLimparDados.addActionListener(new LimparListener());
 		contentPanel.add(btnLimparDados);
 		
-		JButton btnConcluir = new JButton("Concluir");
+		JButton btnConcluir = new JButton("Cancelar");
 		btnConcluir.setBounds(404, 325, 99, 23);
 		btnConcluir.addActionListener(new ConcluidoListener());
 		contentPanel.add(btnConcluir);
 		
 		JLabel lblNome = new JLabel("Nome:");
-		lblNome.setBounds(33, 39, 46, 14);
+		lblNome.setBounds(33, 130, 46, 14);
 		contentPanel.add(lblNome);
 		
 		nome = new JTextField();
-		nome.setBounds(141, 36, 351, 20);
+		nome.setDocument(new LimitarMaiusculas());
 		nome.setText(curso.getNome());
+		nome.setBounds(141, 127, 351, 20);	
 		contentPanel.add(nome);
 		nome.setColumns(10);
 		
 		JLabel lblNvel = new JLabel("N\u00EDvel:");
-		lblNvel.setBounds(33, 96, 46, 14);
+		lblNvel.setBounds(33, 187, 46, 14);
 		contentPanel.add(lblNvel);
 		
-		nivel = new JTextField();
-		nivel.setBounds(141, 93, 351, 20);
-		nivel.setText(curso.getNivel());
+		nivel = new JTextField(curso.getNivel());
+		nivel.setBounds(141, 184, 351, 20);
+		nivel.setDocument(new LimitarMaiusculas());
 		contentPanel.add(nivel);
 		nivel.setColumns(10);
 		
-		JLabel lblAnoCriao = new JLabel("Ano Cria\u00E7\u00E3o:");
-		lblAnoCriao.setBounds(33, 154, 83, 14);
-		contentPanel.add(lblAnoCriao);
+		
+		comboBox = new JComboBox(new DefaultComboBoxModel(Sistema.getNomeDasInstituicao()));
+		comboBox.setEnabled(false);
+		comboBox.setSelectedItem(curso.getInstituicao().getNome());
+		comboBox.setBounds(141, 75, 351, 22);
+		contentPanel.add(comboBox);
+		
+		JLabel lblInstituio = new JLabel("Institui\u00E7\u00E3o:");
+		lblInstituio.setBounds(33, 79, 82, 14);
+		
+		contentPanel.add(lblInstituio);
 		
 		
 		
-		JLabel lblAnoFinalizao = new JLabel("Ano Finaliza\u00E7\u00E3o:");
-		lblAnoFinalizao.setBounds(257, 154, 99, 14);
-		contentPanel.add(lblAnoFinalizao);
+	
 		
 	
 		
@@ -166,6 +190,10 @@ public class TelaCadastroCurso extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			if(nome.getText().equals("")||nome.getText() == null){
+				JOptionPane.showMessageDialog(classe(), "O nome do curso não deve ser vazio!");
+				return;
+			}
 			try{
 				curso.setNome(nome.getText());
 				curso.setNivel(nivel.getText());
@@ -186,8 +214,12 @@ public class TelaCadastroCurso extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(nome.getText().equals("")||nome.getText() == null){
+				JOptionPane.showMessageDialog(classe(), "O nome do curso não deve ser vazio!");
+				return;
+			}
 			try{
-				Sistema.cadastraCurso(nome.getText(),nivel.getText());
+				Sistema.cadastraCurso(nome.getText(),nivel.getText(),(String)comboBox.getSelectedItem());
 				JOptionPane.showMessageDialog(classe(), "Curso Cadastrado Com Sucesso");
 				limpar();
 			}catch(CursoExistenteException e1){
@@ -221,5 +253,4 @@ public class TelaCadastroCurso extends JDialog {
 		}
 		
 	}
-
 }

@@ -25,8 +25,8 @@ public class DAOCurso extends DAO<Curso>{
 	}
 	
 	public Curso findByNomeSingle(String text) {
-		Query q = getManager().createQuery("select c from Curso c where c.nome like "+text);
-		
+		Query q = getManager().createQuery("select c from Curso c where c.nome like :curso");
+		q.setParameter("curso",text);
 		return (Curso) q.getSingleResult();
 	}
 }

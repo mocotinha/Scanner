@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 
 import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.model.Instituicao;
+import br.edu.ifpb.model.InstituicaoExistenteException;
 
 @SuppressWarnings("serial")
 public class TelaCadastroInstituicao extends JDialog {
@@ -49,21 +50,22 @@ public class TelaCadastroInstituicao extends JDialog {
 		getContentPane().add(lblNome);
 		
 		nome = new JTextField();
+		nome.setDocument(new LimitarMaiusculas());
 		nome.setBounds(105, 33, 282, 20);
 		getContentPane().add(nome);
 		nome.setColumns(10);
 		
-		JButton btnCadastro = new JButton("Cadastrar");
+		JButton btnCadastro = new JButton("Salvar");
 		btnCadastro.setBounds(25, 209, 103, 23);
 		btnCadastro.addActionListener(new CadastrarListener());
 		getContentPane().add(btnCadastro);
 		
-		JButton btnLimpar = new JButton("Limpar Dados");
+		JButton btnLimpar = new JButton("Novo");
 		btnLimpar.setBounds(150, 209, 126, 23);
 		btnLimpar.addActionListener(new LimparListener());
 		getContentPane().add(btnLimpar);
 		
-		JButton btnNewButton = new JButton("Concluir");
+		JButton btnNewButton = new JButton("Cancelar");
 		btnNewButton.setBounds(310, 209, 89, 23);
 		btnNewButton.addActionListener(new ConcluidoListener());
 		getContentPane().add(btnNewButton);
@@ -82,21 +84,22 @@ public class TelaCadastroInstituicao extends JDialog {
 		
 		nome = new JTextField();
 		nome.setBounds(105, 33, 282, 20);
+		nome.setDocument(new LimitarMaiusculas());
 		nome.setText(this.instituicao.getNome());
 		getContentPane().add(nome);
 		nome.setColumns(10);
 		
-		JButton btnCadastro = new JButton("Atualizar");
+		JButton btnCadastro = new JButton("Salvar");
 		btnCadastro.setBounds(25, 209, 103, 23);
 		btnCadastro.addActionListener(new AtualizarListener());
 		getContentPane().add(btnCadastro);
 		
-		JButton btnLimpar = new JButton("Limpar Dados");
+		JButton btnLimpar = new JButton("Novo");
 		btnLimpar.setBounds(150, 209, 126, 23);
 		btnLimpar.addActionListener(new LimparListener());
 		getContentPane().add(btnLimpar);
 		
-		JButton btnNewButton = new JButton("Concluir");
+		JButton btnNewButton = new JButton("Cancelar");
 		btnNewButton.setBounds(310, 209, 89, 23);
 		btnNewButton.addActionListener(new ConcluidoListener());
 		getContentPane().add(btnNewButton);
@@ -114,6 +117,10 @@ public class TelaCadastroInstituicao extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(nome.getText().equals("")||nome.getText() == null){
+				JOptionPane.showMessageDialog(classe(), "O nome da Instituição não deve ser vazio!");
+				return;
+			}
 			try{
 				instituicao.setNome(nome.getText());
 				Sistema.atualizaInstituicao(instituicao);
@@ -132,10 +139,16 @@ public class TelaCadastroInstituicao extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(nome.getText().equals("")||nome.getText() == null){
+				JOptionPane.showMessageDialog(classe(), "O nome da Instituição não deve ser vazio!");
+				return;
+			}
 			try{
 				Sistema.cadastraInstituicao(nome.getText());
 				JOptionPane.showMessageDialog(classe(), "Instituição Cadastrada com Sucesso!");
 				limpar();
+			}catch (InstituicaoExistenteException ex){
+				JOptionPane.showMessageDialog(classe(), ex.getMessage());
 			}catch(Exception ex){
 				JOptionPane.showMessageDialog(classe(), "Erro ao cadastrar a Instituicao!");
 			}

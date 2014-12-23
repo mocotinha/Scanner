@@ -2,22 +2,26 @@ package br.edu.ifpb.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.Format;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.MaskFormatter;
 
 import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.model.Aluno;
 import br.edu.ifpb.model.AlunoExistenteException;
+
+import com.toedter.calendar.JDateChooser;
 
 @SuppressWarnings("serial")
 public class TelaCadastroAluno extends JDialog {
@@ -25,12 +29,12 @@ public class TelaCadastroAluno extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField nome;
 	private JTextField matricula;
-	private JFormattedTextField dataNascimento;
 	private JTextField rg;
 	private JTextField cpf;
 	private JTextField mae;
 	private JTextField pai;
 	private Aluno aluno;
+	private JDateChooser dateNascimento;
 
 	/**
 	 * Launch the application.
@@ -47,6 +51,7 @@ public class TelaCadastroAluno extends JDialog {
 
 	/**
 	 * Create the dialog.
+	 * @wbp.parser.constructor
 	 */
 	public TelaCadastroAluno(JFrame telaPrincipal) {
 		super(telaPrincipal,"Cadastro de Aluno",true);
@@ -63,6 +68,7 @@ public class TelaCadastroAluno extends JDialog {
 		
 		nome = new JTextField();
 		nome.setBounds(106, 8, 395, 20);
+		nome.setDocument(new LimitarMaiusculas());
 		contentPanel.add(nome);
 		nome.setColumns(10);
 		
@@ -85,6 +91,7 @@ public class TelaCadastroAluno extends JDialog {
 		
 		rg = new JTextField();
 		rg.setBounds(106, 94, 143, 20);
+		rg.setDocument(new LimitarCharacter(20));
 		contentPanel.add(rg);
 		rg.setColumns(10);
 		
@@ -94,6 +101,7 @@ public class TelaCadastroAluno extends JDialog {
 		
 		cpf = new JTextField();
 		cpf.setBounds(328, 94, 173, 20);
+		cpf.setDocument(new LimitarCharacter(11));
 		contentPanel.add(cpf);
 		cpf.setColumns(10);
 		
@@ -103,6 +111,7 @@ public class TelaCadastroAluno extends JDialog {
 		
 		mae = new JTextField();
 		mae.setBounds(106, 148, 395, 20);
+		mae.setDocument(new LimitarMaiusculas());
 		contentPanel.add(mae);
 		mae.setColumns(10);
 		
@@ -112,33 +121,30 @@ public class TelaCadastroAluno extends JDialog {
 		
 		pai = new JTextField();
 		pai.setBounds(106, 186, 395, 20);
+		pai.setDocument(new LimitarMaiusculas());
 		contentPanel.add(pai);
 		pai.setColumns(10);
 		
-		JButton btnCadastrar = new JButton("Cadastrar");
+		JButton btnCadastrar = new JButton("Salvar");
 		btnCadastrar.setBounds(47, 261, 91, 23);
 		btnCadastrar.addActionListener(new CadastrarListener());
 		contentPanel.add(btnCadastrar);
 		
-		JButton btnLimparDados = new JButton("Limpar Dados");
+		JButton btnLimparDados = new JButton("Novo");
 		btnLimparDados.setBounds(207, 261, 124, 23);
 		btnLimparDados.addActionListener(new LimparListener());
 		contentPanel.add(btnLimparDados);
 		
-		JButton btnConcluir = new JButton("Concluir");
+		JButton btnConcluir = new JButton("Cancelar");
 		btnConcluir.setBounds(399, 261, 91, 23);
 		btnConcluir.addActionListener(new ConcluidoListener());
 		contentPanel.add(btnConcluir);
 		
+		dateNascimento = new JDateChooser("dd/MM/yyyy" , "##/##/####" , ' ' );
+		dateNascimento.setBounds(366, 41, 135, 20);
+		contentPanel.add(dateNascimento);
 		
-		try {
-			dataNascimento = new JFormattedTextField(new MaskFormatter("##/##/####"));
-			dataNascimento.setBounds(363, 39, 138, 20);
-			contentPanel.add(dataNascimento);
-		} catch (ParseException e) {
-			
-			JOptionPane.showMessageDialog(this, "Data inválida, deve seguir o formato dd/mm/aaaa");
-		}
+		
 	}
 	
 
@@ -160,7 +166,8 @@ public class TelaCadastroAluno extends JDialog {
 		
 		nome = new JTextField();
 		nome.setBounds(106, 8, 395, 20);
-		nome.setText(aluno.getNome());
+		nome.setDocument(new LimitarMaiusculas());
+		nome.setText(aluno.getNome());	
 		contentPanel.add(nome);
 		nome.setColumns(10);
 		
@@ -184,6 +191,7 @@ public class TelaCadastroAluno extends JDialog {
 		
 		rg = new JTextField();
 		rg.setBounds(106, 94, 143, 20);
+		rg.setDocument(new LimitarCharacter(20));
 		rg.setText(aluno.getRg());
 		contentPanel.add(rg);
 		rg.setColumns(10);
@@ -194,6 +202,7 @@ public class TelaCadastroAluno extends JDialog {
 		
 		cpf = new JTextField();
 		cpf.setBounds(328, 94, 173, 20);
+		cpf.setDocument(new LimitarCharacter(11));
 		cpf.setText(aluno.getCpf());
 		contentPanel.add(cpf);
 		cpf.setColumns(10);
@@ -204,6 +213,7 @@ public class TelaCadastroAluno extends JDialog {
 		
 		mae = new JTextField();
 		mae.setBounds(106, 148, 395, 20);
+		mae.setDocument(new LimitarMaiusculas());
 		mae.setText(aluno.getMae());
 		contentPanel.add(mae);
 		mae.setColumns(10);
@@ -214,35 +224,41 @@ public class TelaCadastroAluno extends JDialog {
 		
 		pai = new JTextField();
 		pai.setBounds(106, 186, 395, 20);
+		pai.setDocument(new LimitarMaiusculas());
 		pai.setText(aluno.getPai());
 		contentPanel.add(pai);
 		pai.setColumns(10);
 		
-		JButton btnCadastrar = new JButton("Atualizar");
+		JButton btnCadastrar = new JButton("Salvar");
 		btnCadastrar.setBounds(47, 261, 91, 23);
 		btnCadastrar.addActionListener(new AtualizarListener());
 		contentPanel.add(btnCadastrar);
 		
-		JButton btnLimparDados = new JButton("Limpar Dados");
+		JButton btnLimparDados = new JButton("Novo");
 		btnLimparDados.setBounds(207, 261, 124, 23);
 		btnLimparDados.addActionListener(new LimparListener());
 		contentPanel.add(btnLimparDados);
 		
-		JButton btnConcluir = new JButton("Concluir");
+		JButton btnConcluir = new JButton("Cancelar");
 		btnConcluir.setBounds(399, 261, 91, 23);
 		btnConcluir.addActionListener(new ConcluidoListener());
 		contentPanel.add(btnConcluir);
 		
+		dateNascimento = new JDateChooser("dd/MM/yyyy" , "##/##/####" ,' ');
 		
+	    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+	    Date data = null;
 		try {
-			dataNascimento = new JFormattedTextField(new MaskFormatter("##/##/####"));
-			dataNascimento.setBounds(363, 39, 138, 20);
-			dataNascimento.setText(aluno.getDataNascimento());
-			contentPanel.add(dataNascimento);
+			data = (Date)formatter.parse(aluno.getDataNascimento());
 		} catch (ParseException e) {
-			
-			JOptionPane.showMessageDialog(this, "Data inválida, deve seguir o formato dd/mm/aaaa");
-		}
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+	    
+		dateNascimento.setDate(data);
+		dateNascimento.setBounds(346, 39, 144, 20);
+		contentPanel.add(dateNascimento);
+		
 	}
 	
 	
@@ -253,7 +269,7 @@ public class TelaCadastroAluno extends JDialog {
 	private void limpar(){
 		nome.setText("");
 		matricula.setText("");
-		dataNascimento.setText("");
+		dateNascimento.setDate(null);
 		rg.setText("");
 		cpf.setText("");
 		mae.setText("");
@@ -265,12 +281,26 @@ public class TelaCadastroAluno extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(matricula.getText().equals("")||matricula.getText() == null){
+				JOptionPane.showMessageDialog(classe(), "A matricula do aluno não pode ser vazia");
+				return;
+			}
+			
+			if(dateNascimento.getDate() == null){
+				JOptionPane.showMessageDialog(classe(), "A data de Nascimento não deve ser inválida");
+				return;
+			}
 			try{
 				aluno.setNome(nome.getText());
 				aluno.setMatricula(matricula.getText());
 				aluno.setRg(rg.getText());
 				aluno.setCpf(cpf.getText());
-				aluno.setDataNascimento(dataNascimento.getText());
+
+				Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+				String data = formatter.format(dateNascimento.getDate());
+
+
+				aluno.setDataNascimento(data);
 				aluno.setMae(mae.getText());
 				aluno.setPai(pai.getText());
 				Sistema.atualizaAluno(aluno);
@@ -289,8 +319,16 @@ public class TelaCadastroAluno extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(matricula.getText().equals("")||matricula.getText() == null){
+				JOptionPane.showMessageDialog(classe(), "A matricula do aluno não pode ser vazia");
+				return;
+			}
+			if(dateNascimento.getDate() == null){
+				JOptionPane.showMessageDialog(classe(), "A data de Nascimento não deve ser inválida");
+				return;
+			}
 			try{
-				Sistema.cadastraAluno(nome.getText(),matricula.getText(),dataNascimento.getText(),rg.getText(),cpf.getText(),mae.getText(),pai.getText());
+				Sistema.cadastraAluno(nome.getText(),matricula.getText(),dateNascimento.getDateFormatString(),rg.getText(),cpf.getText(),mae.getText(),pai.getText());
 				JOptionPane.showMessageDialog(classe(), "Aluno Cadastrado Com Sucesso");
 				limpar();
 			}catch (AlunoExistenteException e2) {
@@ -321,7 +359,5 @@ public class TelaCadastroAluno extends JDialog {
 		}
 		
 	}
-	
-	
 }
 

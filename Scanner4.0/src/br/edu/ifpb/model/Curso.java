@@ -22,7 +22,7 @@ public class Curso{
 	
 	@ManyToOne
 	private Instituicao instituicao;
-	@OneToMany(cascade=CascadeType.ALL, mappedBy="curso")
+	@OneToMany(cascade=CascadeType.ALL,mappedBy="curso")
 	private List<Dossie> dossies;
 	
 	

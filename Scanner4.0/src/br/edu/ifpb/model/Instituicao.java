@@ -41,4 +41,30 @@ public class Instituicao{
 		this.nome = nome;
 	}
 
+	public List<Dossie> getDossies() {
+		return dossies;
+	}
+
+	
+	public void setDossies(List<Dossie> dossies) {
+		this.dossies = dossies;
+	}
+
+	public List<Aluno> getAlunos() {
+		return alunos;
+	}
+
+	public void setAlunos(List<Aluno> alunos) {
+		this.alunos = alunos;
+	}
+
+	public List<Curso> getCursos() {
+		return cursos;
+	}
+
+	public void setCursos(List<Curso> cursos) {
+		this.cursos = cursos;
+	}
+	
+
 }

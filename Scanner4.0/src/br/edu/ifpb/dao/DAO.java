@@ -81,6 +81,8 @@ public class DAO<T> implements DAOInterface<T> {
 		if(!manager.getTransaction().isActive())
 			manager.getTransaction().begin();
 	}
+	
+
 	public static void commit(){
 		if(manager.getTransaction().isActive()){
 			manager.getTransaction().commit();

@@ -10,6 +10,8 @@ public class Application {
 		Sistema sys = Sistema.getInstance();
 		cadastraUser();
 		sys.iniciar();
+	
+		
 		
 		
 		
@@ -28,10 +30,13 @@ public class Application {
 			user.setLogin("admin");
 			user.setSenha(Sistema.md5("123"));
 			dao.persist(user);
+		}finally{
+			DAO.flush();
+			DAO.commit();
+			DAO.close();
 		}
 		
-		DAO.commit();
-		DAO.close();
+		
 
 		
 	}

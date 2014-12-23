@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 
 import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.model.Usuario;
+import br.edu.ifpb.model.UsuarioExistenteException;
 
 @SuppressWarnings("serial")
 public class TelaCadastroUsuario extends JDialog {
@@ -91,17 +92,17 @@ public class TelaCadastroUsuario extends JDialog {
 		password2.setBounds(149, 138, 197, 20);
 		getContentPane().add(password2);
 		
-		JButton btnCadastrar = new JButton("Cadastrar");
+		JButton btnCadastrar = new JButton("Salvar");
 		btnCadastrar.setBounds(36, 243, 103, 23);
 		btnCadastrar.addActionListener(new CadastrarListener());
 		getContentPane().add(btnCadastrar);
 		
-		JButton btnNewButton = new JButton("Limpar Dados");
+		JButton btnNewButton = new JButton("Novo");
 		btnNewButton.setBounds(157, 243, 118, 23);
 		btnNewButton.addActionListener(new LimparListener());
 		getContentPane().add(btnNewButton);
 		
-		JButton btnConcluir = new JButton("Concluir");
+		JButton btnConcluir = new JButton("Cancelar");
 		btnConcluir.setBounds(298, 241, 98, 26);
 		btnConcluir.addActionListener(new ConcluidoListener());
 		getContentPane().add(btnConcluir);
@@ -164,17 +165,17 @@ public class TelaCadastroUsuario extends JDialog {
 		password2.setEditable(false);
 		getContentPane().add(password2);
 		
-		JButton btnCadastrar = new JButton("Atualizar");
+		JButton btnCadastrar = new JButton("Salvar");
 		btnCadastrar.setBounds(36, 243, 103, 23);
 		btnCadastrar.addActionListener(new AtualizarListener());
 		getContentPane().add(btnCadastrar);
 		
-		JButton btnNewButton = new JButton("Limpar Dados");
+		JButton btnNewButton = new JButton("Novo");
 		btnNewButton.setBounds(157, 243, 118, 23);
 		btnNewButton.addActionListener(new LimparListener());
 		getContentPane().add(btnNewButton);
 		
-		JButton btnConcluir = new JButton("Concluir");
+		JButton btnConcluir = new JButton("Cancelar");
 		btnConcluir.setBounds(298, 241, 98, 26);
 		btnConcluir.addActionListener(new ConcluidoListener());
 		getContentPane().add(btnConcluir);
@@ -236,6 +237,8 @@ public class TelaCadastroUsuario extends JDialog {
 				
 				JOptionPane.showMessageDialog(classe(), "Usuário Cadastrado com Sucesso!");
 				limpar();
+			}catch(UsuarioExistenteException ex){
+				JOptionPane.showMessageDialog(classe(), ex.getMessage());
 			}catch (Exception ex){
 				JOptionPane.showMessageDialog(classe(), "Erro ao cadastrar o Usuario!");
 			}

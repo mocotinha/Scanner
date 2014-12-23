@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultComboBoxModel;
@@ -23,11 +24,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import br.edu.ifpb.controler.Sistema;
+import br.edu.ifpb.model.DocumentoAcademico;
+import br.edu.ifpb.model.DocumentoDigital;
 import br.edu.ifpb.model.Dossie;
 import br.edu.ifpb.model.Imagem;
 
 @SuppressWarnings("serial")
 public class TelaCadastroDossie extends JDialog {
+	private Dossie dossie;
 	private JTextField instituicao;
 	private JTextField curso;
 	private JTextField aluno;
@@ -37,6 +41,8 @@ public class TelaCadastroDossie extends JDialog {
 	private JTextField qntDocumentos;
 	@SuppressWarnings("rawtypes")
 	private JComboBox tipo;
+	@SuppressWarnings("rawtypes")
+	private JList list;
 	@SuppressWarnings("rawtypes")
 	private JList lista;
 	private JTextPane descricao;
@@ -66,7 +72,9 @@ public class TelaCadastroDossie extends JDialog {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroDossie(JFrame principal, Dossie dossie) {
+		
 		super(principal,"Dossiê",true);
+		this.dossie = dossie;
 		setBounds(100, 100, 802, 598);
 		getContentPane().setLayout(null);
 		
@@ -148,7 +156,8 @@ public class TelaCadastroDossie extends JDialog {
 		
 		lblNenhumaImagemSelecionada = new JLabel("Nenhuma Imagem Selecionada");
 		lblNenhumaImagemSelecionada.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNenhumaImagemSelecionada.setBounds(516, 140, 258, 345);
+		lblNenhumaImagemSelecionada.setBounds(555, 256, 202, 241);
+		
 		getContentPane().add(lblNenhumaImagemSelecionada);
 		
 		JButton btnDigitalizarNovaImagem = new JButton("Digitalizar Nova Imagem");
@@ -194,7 +203,7 @@ public class TelaCadastroDossie extends JDialog {
 		lblCdigoDoDossi.setBounds(517, 32, 112, 16);
 		getContentPane().add(lblCdigoDoDossi);
 		
-		codigoDossie = new JTextField();
+		codigoDossie = new JTextField(dossie.getId());
 		codigoDossie.setEnabled(false);
 		codigoDossie.setEditable(false);
 		codigoDossie.setBounds(711, 30, 46, 20);
@@ -205,13 +214,100 @@ public class TelaCadastroDossie extends JDialog {
 		lblQuantidadeDeDocumentos.setBounds(516, 55, 168, 16);
 		getContentPane().add(lblQuantidadeDeDocumentos);
 		
-		qntDocumentos = new JTextField();
+		qntDocumentos = new JTextField(dossie.getDocumentos().size()+"");
 		qntDocumentos.setEnabled(false);
 		qntDocumentos.setEditable(false);
 		qntDocumentos.setBounds(711, 53, 46, 20);
 		getContentPane().add(qntDocumentos);
 		qntDocumentos.setColumns(10);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(609, 96, 148, 117);
+		getContentPane().add(scrollPane_2);
+		
+		list = new JList();
+		list.setModel(new ListaDocumento());
+		scrollPane_2.setViewportView(list);
+		list.setValueIsAdjusting(true);
+		list.addListSelectionListener(new DocumentoSelecionadoListener());
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		JLabel lblDocumentos = new JLabel("Documentos:");
+		lblDocumentos.setBounds(509, 99, 90, 14);
+		getContentPane().add(lblDocumentos);
 
+	}
+	
+	private class DocumentoSelecionadoListener implements ListSelectionListener{
+
+		@Override
+		public void valueChanged(ListSelectionEvent e) {
+			// TODO Auto-generated method stub
+			DocumentoDigital aux = ((ListaDocumento)list.getModel()).getElementAt(list.getSelectedIndex());
+			if(aux instanceof DocumentoAcademico){
+				tipo.setSelectedItem(0);
+			}else{
+				tipo.setSelectedItem(0);
+			}
+			titulo.setText(aux.getTitulo());
+			classificao.setText(aux.getClassificacao());
+			descricao.setText(aux.getDescricao());
+			//Listar as Imagens
+			//TODO
+			
+			
+		}
+		
+	}
+	
+	private class ListaDocumento extends AbstractListModel<DocumentoDigital>{
+
+		private List<DocumentoDigital> dados = dossie.getDocumentos();
+		@Override
+		public DocumentoDigital getElementAt(int arg0) {
+			return dados.get(arg0);
+		
+		}
+
+		@Override
+		public int getSize() {
+			
+			return dados.size();
+		}
+		
+	}
+	
+	private class SelecionarImagemListener implements ListSelectionListener{
+
+		@Override
+		public void valueChanged(ListSelectionEvent arg0) {
+
+				ImageIcon img = new ImageIcon(((ListaImagensModel)lista.getModel()).getElementAt(lista.getSelectedIndex()).getImagem());
+				img.setImage(img.getImage().getScaledInstance(202, 241, 500));
+				lblNenhumaImagemSelecionada.setText("");
+				lblNenhumaImagemSelecionada.setIcon(img);
+					
+	
+			}
+
+		
+	}
+	
+	private class ListaImagensModel extends AbstractListModel<Imagem>{
+
+		private List<Imagem> imgs = Sistema.getImagensDigitalizadas();
+		@Override
+		public Imagem getElementAt(int index) {
+			
+			return imgs.get(index);
+		}
+
+		@Override
+		public int getSize() {
+			
+			return imgs.size();
+		}
+		
 	}
 	
 	private class DigitalizarNovaImagemListener implements ActionListener{
@@ -221,38 +317,12 @@ public class TelaCadastroDossie extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 			Imagem img = Sistema.digitalizaImagem();
 			Sistema.adicionaImagem(img);
-			int qnt = Sistema.getQntImagensDigitalizadas();
-			final String[] valores = new String[qnt];
-			final ArrayList<Imagem> imgs = (ArrayList<Imagem>) Sistema.getImagensDigitalizadas();
-			for(int i=0;i<qnt;i++){
-				valores[i] = i+"";
-			}
+			
 			
 			lista = new JList();
-			lista.setModel(new AbstractListModel() {
-				String[] values = valores;
-			
-				public int getSize() {
-					return values.length;
-				}
-				public Object getElementAt(int index) {
-					return values[index];
-				}
-			});
+			lista.setModel(new ListaImagensModel());
 			lista.setValueIsAdjusting(true);
-			lista.addListSelectionListener(new ListSelectionListener() {
-				
-				@Override
-				public void valueChanged(ListSelectionEvent e) {
-					if(imgs.size()>0){
-						ImageIcon img = new ImageIcon(imgs.get(lista.getSelectedIndex()).getImagem());
-						img.setImage(img.getImage().getScaledInstance(478, 567, 500));
-						lblNenhumaImagemSelecionada.setText("");
-						lblNenhumaImagemSelecionada.setIcon(img);
-					
-					}
-				}
-			});
+			lista.addListSelectionListener(new SelecionarImagemListener());
 		
 			lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			((JScrollPane) scrollPane_1).setViewportView(lista);
@@ -311,6 +381,4 @@ public class TelaCadastroDossie extends JDialog {
 		}
 		
 	}
-	
-	
 }

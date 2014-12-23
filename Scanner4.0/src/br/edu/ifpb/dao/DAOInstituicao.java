@@ -28,7 +28,7 @@ public class DAOInstituicao extends DAO<Instituicao>{
 		}
 	}
 
-	private Instituicao findPorNome(String nome) throws NoResultException{
+	public Instituicao findPorNome(String nome) throws NoResultException{
 		Query q = getManager().createQuery("select distinct i from Instituicao i where i.nome like '"+nome+"%'" );
 		return (Instituicao) q.getSingleResult();
 	}
