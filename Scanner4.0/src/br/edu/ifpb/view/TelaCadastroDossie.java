@@ -120,6 +120,7 @@ public class TelaCadastroDossie extends JDialog {
 		
 		titulo = new JTextField();
 		titulo.setBounds(139, 138, 350, 20);
+		titulo.setDocument(new LimitarMaiusculas());
 		getContentPane().add(titulo);
 		titulo.setColumns(10);
 		

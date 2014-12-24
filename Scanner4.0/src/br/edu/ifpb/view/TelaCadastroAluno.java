@@ -328,7 +328,11 @@ public class TelaCadastroAluno extends JDialog {
 				return;
 			}
 			try{
-				Sistema.cadastraAluno(nome.getText(),matricula.getText(),dateNascimento.getDateFormatString(),rg.getText(),cpf.getText(),mae.getText(),pai.getText());
+				
+				Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+				String data = formatter.format(dateNascimento.getDate());
+				
+				Sistema.cadastraAluno(nome.getText(),matricula.getText(),data,rg.getText(),cpf.getText(),mae.getText(),pai.getText());
 				JOptionPane.showMessageDialog(classe(), "Aluno Cadastrado Com Sucesso");
 				limpar();
 			}catch (AlunoExistenteException e2) {
