@@ -28,7 +28,9 @@ import br.edu.ifpb.model.Aluno;
 import br.edu.ifpb.model.AlunoExistenteException;
 import br.edu.ifpb.model.Curso;
 import br.edu.ifpb.model.CursoExistenteException;
+import br.edu.ifpb.model.DocumentoAcademico;
 import br.edu.ifpb.model.DocumentoDigital;
+import br.edu.ifpb.model.DocumentoPessoal;
 import br.edu.ifpb.model.Dossie;
 import br.edu.ifpb.model.Imagem;
 import br.edu.ifpb.model.Instituicao;
@@ -39,7 +41,6 @@ import br.edu.ifpb.model.UsuarioExistenteException;
 public class Sistema {
 	
 	private static Sistema sys;
-	@SuppressWarnings("unused")
 	private static Usuario user;
 	private static Map<String, Object> dados = new HashMap<String,Object>();
 	private static List<Imagem> imgs = new ArrayList<Imagem>();
@@ -477,13 +478,13 @@ public class Sistema {
 		DAO.begin();
 		Dossie aux;
 		try{
-			aux = dao.findBySelecionados(dossie.getAluno().getId(),dossie.getInstituicao().getId(), dossie.getCurso().getId());
+			dao.findBySelecionados(dossie.getAluno().getId(),dossie.getInstituicao().getId(), dossie.getCurso().getId());
 		}catch(Exception e){
 			dao.persist(dossie);
-			aux = dossie;
 		}
 		DAO.flush();
 		DAO.commit();
+		aux = dao.findBySelecionados(dossie.getAluno().getId(),dossie.getInstituicao().getId(), dossie.getCurso().getId());
 		DAO.close();
 		
 		SistemaDeTelas.cadastraDossie(aux);
@@ -527,6 +528,77 @@ public class Sistema {
 		
 		return aux2;
 	}
+
+
+	public static void limpaImagens() {
+		imgs.clear();
+		
+	}
+
+
+	public static void cadastraDocumentoAoDossie(Dossie dossie, String titulo,
+			String classificacao, String descricao, String tipo) {
+		DocumentoDigital doc;
+		
+		if(tipo.equals("Documento Pessoal")){
+			doc = new DocumentoPessoal();
+		}else{
+			doc = new DocumentoAcademico();
+		}
+		
+		doc.setTitulo(titulo);
+		doc.setDescricao(descricao);
+		doc.setClassificacao(classificacao);
+		doc.setUserResponsavel(user);
+		dossie.addDocumentoDigital(doc);
+		DAODossie dao = new DAODossie();
+		DAO.open();
+		DAO.begin();
+		dao.merge(dossie);
+		DAO.commit();
+		DAO.close();
+		
+	}
+
+
+	public static Dossie atualizaDossie(Dossie dossie) {
+		DAODossie dao = new DAODossie();
+		DAO.open();
+		DAO.begin();
+		Dossie aux = dao.findBySelecionados(dossie.getAluno().getId(),dossie.getInstituicao().getId(), dossie.getCurso().getId());
+		DAO.close();
+		return aux;
+	}
+
+
+	public static void atualizaDocumentos(Dossie dossie, String titulo, String classificacao, String descricao, String tipo, int index) {
+		DocumentoDigital doc = dossie.getDocumentos().get(index);
+		
+		if(!((doc instanceof DocumentoPessoal && tipo.equals("Documento Pessoal")) || (doc instanceof DocumentoAcademico && !tipo.equals("Documento Pessoal")))){
+			dossie.getDocumentos().remove(doc);
+			if(tipo.equals("Documento Pessoal")){
+				doc = new DocumentoPessoal();
+			}else{
+				doc = new DocumentoAcademico();
+			}
+			dossie.addDocumentoDigital(doc);
+		}
+		
+		doc.setTitulo(titulo);
+		doc.setDescricao(descricao);
+		doc.setClassificacao(classificacao);
+		
+		
+		DAODossie dao = new DAODossie();
+		DAO.open();
+		DAO.begin();
+		dao.merge(dossie);
+		DAO.commit();
+		DAO.close();
+		
+	}
+
+
 
 
 	

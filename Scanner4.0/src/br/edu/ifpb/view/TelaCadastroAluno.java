@@ -78,6 +78,7 @@ public class TelaCadastroAluno extends JDialog {
 		
 		matricula = new JTextField();
 		matricula.setBounds(106, 39, 143, 20);
+		matricula.setDocument(new LimitarCharacter());
 		contentPanel.add(matricula);
 		matricula.setColumns(10);
 		
@@ -177,6 +178,7 @@ public class TelaCadastroAluno extends JDialog {
 		
 		matricula = new JTextField();
 		matricula.setBounds(106, 39, 143, 20);
+		matricula.setDocument(new LimitarCharacter());
 		matricula.setText(aluno.getMatricula());
 		contentPanel.add(matricula);
 		matricula.setColumns(10);

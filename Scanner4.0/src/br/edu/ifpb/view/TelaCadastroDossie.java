@@ -3,7 +3,6 @@ package br.edu.ifpb.view;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
@@ -15,6 +14,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -48,6 +48,8 @@ public class TelaCadastroDossie extends JDialog {
 	private JTextPane descricao;
 	private JLabel lblNenhumaImagemSelecionada;
 	private JScrollPane scrollPane_1;
+	private JScrollPane scrollPane_2 ;
+	private boolean status = true;
 
 	/**
 	 * Launch the application.
@@ -72,8 +74,9 @@ public class TelaCadastroDossie extends JDialog {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroDossie(JFrame principal, Dossie dossie) {
-		
 		super(principal,"Dossiê",true);
+		
+		Sistema.limpaImagens();
 		this.dossie = dossie;
 		setBounds(100, 100, 802, 598);
 		getContentPane().setLayout(null);
@@ -180,13 +183,13 @@ public class TelaCadastroDossie extends JDialog {
 		tipo.setBounds(139, 108, 350, 25);
 		getContentPane().add(tipo);
 		
-		JButton btnCadastrarDocumento = new JButton("Cadastrar");
+		JButton btnCadastrarDocumento = new JButton("Salvar");
 		btnCadastrarDocumento.setBounds(25, 522, 159, 26);
 		btnCadastrarDocumento.addActionListener(new CadastrarDocumentoListener());
 		getContentPane().add(btnCadastrarDocumento);
 		
-		JButton btnLimpar = new JButton("Limpar");
-		btnLimpar.setBounds(429, 522, 98, 26);
+		JButton btnLimpar = new JButton("Novo Documento");
+		btnLimpar.setBounds(429, 522, 136, 26);
 		btnLimpar.addActionListener(new LimparListener());
 		getContentPane().add(btnLimpar);
 		
@@ -195,7 +198,7 @@ public class TelaCadastroDossie extends JDialog {
 		btnNovoDossi.addActionListener(new NovoDossieListener());
 		getContentPane().add(btnNovoDossi);
 		
-		JButton btnConcludo = new JButton("Conclu\u00EDdo");
+		JButton btnConcludo = new JButton("Cancelar");
 		btnConcludo.setBounds(606, 522, 98, 26);
 		btnConcludo.addActionListener(new ConcluidoListener());
 		getContentPane().add(btnConcludo);
@@ -204,7 +207,7 @@ public class TelaCadastroDossie extends JDialog {
 		lblCdigoDoDossi.setBounds(517, 32, 112, 16);
 		getContentPane().add(lblCdigoDoDossi);
 		
-		codigoDossie = new JTextField(dossie.getId());
+		codigoDossie = new JTextField(dossie.getId()+"");
 		codigoDossie.setEnabled(false);
 		codigoDossie.setEditable(false);
 		codigoDossie.setBounds(711, 30, 46, 20);
@@ -222,7 +225,7 @@ public class TelaCadastroDossie extends JDialog {
 		getContentPane().add(qntDocumentos);
 		qntDocumentos.setColumns(10);
 		
-		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2= new JScrollPane();
 		scrollPane_2.setBounds(609, 96, 148, 117);
 		getContentPane().add(scrollPane_2);
 		
@@ -248,11 +251,18 @@ public class TelaCadastroDossie extends JDialog {
 			if(aux instanceof DocumentoAcademico){
 				tipo.setSelectedItem(0);
 			}else{
-				tipo.setSelectedItem(0);
+				tipo.setSelectedItem(1);
 			}
 			titulo.setText(aux.getTitulo());
 			classificao.setText(aux.getClassificacao());
 			descricao.setText(aux.getDescricao());
+			if(aux instanceof DocumentoAcademico){
+				tipo.setSelectedIndex(0);
+				
+			}else{
+				tipo.setSelectedIndex(1);
+			}
+			status = false;
 			//Listar as Imagens
 			//TODO
 			
@@ -262,8 +272,9 @@ public class TelaCadastroDossie extends JDialog {
 	}
 	
 	private class ListaDocumento extends AbstractListModel<DocumentoDigital>{
-
+		
 		private List<DocumentoDigital> dados = dossie.getDocumentos();
+		
 		@Override
 		public DocumentoDigital getElementAt(int arg0) {
 			return dados.get(arg0);
@@ -276,8 +287,11 @@ public class TelaCadastroDossie extends JDialog {
 			return dados.size();
 		}
 		
+		
+		
 	}
 	
+	@SuppressWarnings("unused")
 	private class SelecionarImagemListener implements ListSelectionListener{
 
 		@Override
@@ -322,10 +336,6 @@ public class TelaCadastroDossie extends JDialog {
 			
 			lista = new JList();
 			lista.setModel(new ListaImagensModel());
-			lista.setValueIsAdjusting(true);
-			lista.addListSelectionListener(new SelecionarImagemListener());
-		
-			lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			((JScrollPane) scrollPane_1).setViewportView(lista);
 
 			
@@ -343,13 +353,48 @@ public class TelaCadastroDossie extends JDialog {
 		
 	}
 	
+	private TelaCadastroDossie classe(){
+		return this;
+	}
+	
+	private void limpar(){
+		list.setSelectedIndex(-1);
+		titulo.setText("");
+		descricao.setText("");
+		classificao.setText("");
+		tipo.setSelectedIndex(0);
+		status = true;
+	}
+	
+	
 	private class CadastrarDocumentoListener implements ActionListener{
 
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			try{
+				if(status){
+					Sistema.cadastraDocumentoAoDossie(dossie,titulo.getText(),classificao.getText(), descricao.getText(),(String)tipo.getSelectedItem());
+					JOptionPane.showMessageDialog(classe(), "Documento Cadastrado com Sucesso!");
+				}else{
+					Sistema.atualizaDocumentos(dossie,titulo.getText(),classificao.getText(), descricao.getText(),(String)tipo.getSelectedItem(),list.getSelectedIndex());
+				}
+				
+				list = new JList();
+				list.setModel(new ListaDocumento());
+				list.setValueIsAdjusting(true);
+				list.addListSelectionListener(new DocumentoSelecionadoListener());
+				list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				((JScrollPane) scrollPane_2).setViewportView(list);
+				limpar();
+				dossie = Sistema.atualizaDossie(dossie);
+			}catch (Exception e2) {
+				e2.printStackTrace();
+				JOptionPane.showMessageDialog(classe(), "Erro ao cadastrar o documento");
+			}
 			
 		}
+			
 		
 	}
 	
@@ -357,7 +402,8 @@ public class TelaCadastroDossie extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			limpar();
+			
 			
 		}
 		

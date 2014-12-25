@@ -11,7 +11,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class DocumentoDigital {
+public class DocumentoDigital{
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -91,6 +91,13 @@ public class DocumentoDigital {
 		this.descricao = descricao;
 	}
 	
+	@Override
+	public String toString() {
+		
+		return titulo;
+	}
+
+
 	
 	
 	

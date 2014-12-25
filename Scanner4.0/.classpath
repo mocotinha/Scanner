@@ -21,7 +21,7 @@
 	<classpathentry kind="lib" path="JarsImportados/slf4j-simple-1.7.7.jar"/>
 	<classpathentry kind="lib" path="JarsImportados/uk.co.mmscomputing.device.twain.jar"/>
 	<classpathentry kind="lib" path="JarsImportados/xswingx.jar"/>
-	<classpathentry kind="lib" path="E:/eclipse-java-luna-SR1-win32/eclipse/Lib/Jcalendar/lib/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="E:/eclipse-java-luna-SR1-win32/eclipse/Lib/Jcalendar/lib/jcalendar-1.4.jar" sourcepath="C:/Users/Alex/.m2/repository/com/toedter/jcalendar/1.4/jcalendar-1.4-sources.jar"/>
 	<classpathentry kind="lib" path="E:/eclipse-java-luna-SR1-win32/eclipse/Lib/Jcalendar/lib/jgoodies-common-1.2.0.jar"/>
 	<classpathentry kind="lib" path="E:/eclipse-java-luna-SR1-win32/eclipse/Lib/Jcalendar/lib/jgoodies-looks-2.4.1.jar"/>
 	<classpathentry kind="lib" path="E:/eclipse-java-luna-SR1-win32/eclipse/Lib/Jcalendar/lib/junit-4.6.jar"/>
