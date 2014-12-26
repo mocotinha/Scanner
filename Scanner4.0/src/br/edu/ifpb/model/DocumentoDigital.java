@@ -117,10 +117,14 @@ public class DocumentoDigital{
 	public List<Imagem> getImagens() {
 		return imagens;
 	}
-	public void setImagens(List<Imagem> imagens) {
-		for (int i =0; i < imagens.size(); i++) {
-			addImagem(imagens.get(i));
+	
+	public void setImagens(List<Imagem> TmpImagens) {
+		int quantidade =  TmpImagens.size();
+		for (int i =0; i < quantidade; i++) {
+			addImagem(TmpImagens.get(i));
 		}
+		System.out.println(quantidade);
+		System.out.println(TmpImagens.size());
 	}
 
 	private void addImagem(Imagem imagem) {
