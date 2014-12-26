@@ -1,12 +1,17 @@
 package br.edu.ifpb.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -19,9 +24,11 @@ public class DocumentoDigital{
 	private String titulo;
 	private String classificacao;
 	private String descricao;
+	private String tipo;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataLeitura;
-	
+	@OneToMany(mappedBy="doc",cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+	private List<Imagem> imagens = new ArrayList<Imagem>();
 	@ManyToOne
 	private Usuario userResponsavel;
 	@ManyToOne
@@ -32,6 +39,15 @@ public class DocumentoDigital{
 	public void setDossie(Dossie dossie) {
 		this.dossie = dossie;
 		
+	}
+
+	
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
 
 	public void setUsuario(Usuario usuario) {
@@ -97,6 +113,23 @@ public class DocumentoDigital{
 		return titulo;
 	}
 
+	
+	public List<Imagem> getImagens() {
+		return imagens;
+	}
+	public void setImagens(List<Imagem> imagens) {
+		for (int i =0; i < imagens.size(); i++) {
+			addImagem(imagens.get(i));
+		}
+	}
+
+	private void addImagem(Imagem imagem) {
+		imagem.setDoc(this);
+		this.imagens.add(imagem);
+		
+	}
+
+	
 
 	
 	

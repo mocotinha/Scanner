@@ -3,6 +3,7 @@ package br.edu.ifpb.view;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
@@ -26,6 +27,7 @@ import javax.swing.event.ListSelectionListener;
 import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.model.DocumentoAcademico;
 import br.edu.ifpb.model.DocumentoDigital;
+import br.edu.ifpb.model.DocumentoPessoal;
 import br.edu.ifpb.model.Dossie;
 import br.edu.ifpb.model.Imagem;
 
@@ -78,6 +80,7 @@ public class TelaCadastroDossie extends JDialog {
 		
 		Sistema.limpaImagens();
 		this.dossie = dossie;
+		Sistema.setImagens(new ArrayList<Imagem>());
 		setBounds(100, 100, 802, 598);
 		getContentPane().setLayout(null);
 		
@@ -156,6 +159,10 @@ public class TelaCadastroDossie extends JDialog {
 		getContentPane().add(scrollPane_1);
 		
 		lista = new JList();
+		lista.setModel(new ListaImagensModel());
+		lista.setValueIsAdjusting(true);
+		lista.addListSelectionListener(new SelecionarImagemListener());
+		lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPane_1.setViewportView(lista);
 		
 		lblNenhumaImagemSelecionada = new JLabel("Nenhuma Imagem Selecionada");
@@ -242,29 +249,37 @@ public class TelaCadastroDossie extends JDialog {
 
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void atualizaListaDeImagens(){
+		lista = new JList();
+		lista.setModel(new ListaImagensModel());
+		lista.setValueIsAdjusting(true);
+		lista.addListSelectionListener(new SelecionarImagemListener());
+		lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		((JScrollPane) scrollPane_1).setViewportView(lista);
+	}
+	
 	private class DocumentoSelecionadoListener implements ListSelectionListener{
 
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			// TODO Auto-generated method stub
+			limpar();
 			DocumentoDigital aux = ((ListaDocumento)list.getModel()).getElementAt(list.getSelectedIndex());
-			if(aux instanceof DocumentoAcademico){
+			if(aux.getTipo().equals("Documento Acadêmico")){
 				tipo.setSelectedItem(0);
+				
 			}else{
 				tipo.setSelectedItem(1);
+				
 			}
+			Sistema.setImagens(aux.getImagens());
 			titulo.setText(aux.getTitulo());
 			classificao.setText(aux.getClassificacao());
 			descricao.setText(aux.getDescricao());
-			if(aux instanceof DocumentoAcademico){
-				tipo.setSelectedIndex(0);
-				
-			}else{
-				tipo.setSelectedIndex(1);
-			}
+			
 			status = false;
-			//Listar as Imagens
-			//TODO
+			atualizaListaDeImagens();
+			
 			
 			
 		}
@@ -291,7 +306,7 @@ public class TelaCadastroDossie extends JDialog {
 		
 	}
 	
-	@SuppressWarnings("unused")
+
 	private class SelecionarImagemListener implements ListSelectionListener{
 
 		@Override
@@ -301,6 +316,7 @@ public class TelaCadastroDossie extends JDialog {
 				img.setImage(img.getImage().getScaledInstance(202, 241, 500));
 				lblNenhumaImagemSelecionada.setText("");
 				lblNenhumaImagemSelecionada.setIcon(img);
+				
 					
 	
 			}
@@ -324,19 +340,17 @@ public class TelaCadastroDossie extends JDialog {
 		}
 		
 	}
+
 	
 	private class DigitalizarNovaImagemListener implements ActionListener{
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Imagem img = Sistema.digitalizaImagem();
 			Sistema.adicionaImagem(img);
 			
 			
-			lista = new JList();
-			lista.setModel(new ListaImagensModel());
-			((JScrollPane) scrollPane_1).setViewportView(lista);
+			atualizaListaDeImagens();
 
 			
 		}
@@ -347,7 +361,29 @@ public class TelaCadastroDossie extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			try{
+				Sistema.removerImagem((Imagem)lista.getModel().getElementAt(lista.getSelectedIndex()));
+				
+				atualizaListaDeImagens();
+				
+				getContentPane().remove(lblNenhumaImagemSelecionada);
+				lblNenhumaImagemSelecionada = new JLabel("Nenhuma Imagem Selecionada");
+				lblNenhumaImagemSelecionada.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNenhumaImagemSelecionada.setBounds(555, 256, 202, 241);
+				lblNenhumaImagemSelecionada.setIcon(null);
+				getContentPane().add(lblNenhumaImagemSelecionada);
+				getContentPane().repaint();
+				
+				
+				
+				
+				lista.setSelectedIndex(-1);
+			}catch(Exception ex){
+				JOptionPane.showMessageDialog(classe(), "Nenhuma Imagem foi selecionada para exclusão!");
+			}
+			
+			
+			
 			
 		}
 		
@@ -364,6 +400,15 @@ public class TelaCadastroDossie extends JDialog {
 		classificao.setText("");
 		tipo.setSelectedIndex(0);
 		status = true;
+		getContentPane().remove(lblNenhumaImagemSelecionada);
+		lblNenhumaImagemSelecionada = new JLabel("Nenhuma Imagem Selecionada");
+		lblNenhumaImagemSelecionada.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNenhumaImagemSelecionada.setBounds(555, 256, 202, 241);
+		lblNenhumaImagemSelecionada.setIcon(null);
+		getContentPane().add(lblNenhumaImagemSelecionada);
+		getContentPane().repaint();
+		Sistema.setImagens(new ArrayList<Imagem>());
+		atualizaListaDeImagens();
 	}
 	
 	
@@ -388,6 +433,7 @@ public class TelaCadastroDossie extends JDialog {
 				((JScrollPane) scrollPane_2).setViewportView(list);
 				limpar();
 				dossie = Sistema.atualizaDossie(dossie);
+				qntDocumentos.setText(dossie.getDocumentos().size()+"");
 			}catch (Exception e2) {
 				e2.printStackTrace();
 				JOptionPane.showMessageDialog(classe(), "Erro ao cadastrar o documento");

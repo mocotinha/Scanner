@@ -23,6 +23,7 @@ public class Aluno{
 	private String matricula;
 	private String cpf;
 	private String rg;
+	private String uf;
 	private String mae;
 	private String pai;
 	private String dataNascimento;
@@ -35,6 +36,15 @@ public class Aluno{
 
 	public int getId() {
 		return id;
+	}
+	
+
+	public String getUf() {
+		return uf;
+	}
+
+	public void setUf(String uf) {
+		this.uf = uf;
 	}
 
 	public void setId(int id) {

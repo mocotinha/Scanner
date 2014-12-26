@@ -9,12 +9,12 @@ import uk.co.mmscomputing.device.scanner.ScannerIOMetadata.Type;
 import uk.co.mmscomputing.device.scanner.ScannerListener;
 
 public class SistemaDeDigitalizacao implements ScannerListener {
-	private static SistemaDeDigitalizacao sd;
+	
 	private BufferedImage imagemCapturada = null;
 	private Scanner scan;
 	ScannerIOMetadata.Type status = new Type();
 	
-	private SistemaDeDigitalizacao(){
+	public SistemaDeDigitalizacao(){
 		
 	}
 	private void getDevice() throws  ScannerIOException{
@@ -44,12 +44,13 @@ public class SistemaDeDigitalizacao implements ScannerListener {
 		this.scan.acquire();
 		while(!status.equals(ScannerIOMetadata.ACQUIRED)){
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				
 				e.printStackTrace();
 			}
 		}
+
 		
 		
 	}
@@ -59,15 +60,7 @@ public class SistemaDeDigitalizacao implements ScannerListener {
 		return this.imagemCapturada;
 	}
 
-	public static SistemaDeDigitalizacao getInstance() {
-		if(sd == null){
-			sd = new SistemaDeDigitalizacao();
-			return sd;
-		}else{
-			return sd;
-		}
-		
-	}
+
 	
 	
 

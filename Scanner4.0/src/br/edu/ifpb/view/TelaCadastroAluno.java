@@ -23,6 +23,9 @@ import br.edu.ifpb.model.AlunoExistenteException;
 
 import com.toedter.calendar.JDateChooser;
 
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+
 @SuppressWarnings("serial")
 public class TelaCadastroAluno extends JDialog {
 
@@ -35,6 +38,8 @@ public class TelaCadastroAluno extends JDialog {
 	private JTextField pai;
 	private Aluno aluno;
 	private JDateChooser dateNascimento;
+	@SuppressWarnings("rawtypes")
+	private JComboBox comboBox;
 
 	/**
 	 * Launch the application.
@@ -53,6 +58,7 @@ public class TelaCadastroAluno extends JDialog {
 	 * Create the dialog.
 	 * @wbp.parser.constructor
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroAluno(JFrame telaPrincipal) {
 		super(telaPrincipal,"Cadastro de Aluno",true);
 		setBounds(100, 100, 568, 389);
@@ -97,11 +103,11 @@ public class TelaCadastroAluno extends JDialog {
 		rg.setColumns(10);
 		
 		JLabel lblCpf = new JLabel("CPF:");
-		lblCpf.setBounds(259, 97, 46, 14);
+		lblCpf.setBounds(329, 97, 25, 14);
 		contentPanel.add(lblCpf);
 		
 		cpf = new JTextField();
-		cpf.setBounds(328, 94, 173, 20);
+		cpf.setBounds(366, 94, 135, 20);
 		cpf.setDocument(new LimitarCharacter(11));
 		contentPanel.add(cpf);
 		cpf.setColumns(10);
@@ -145,12 +151,23 @@ public class TelaCadastroAluno extends JDialog {
 		dateNascimento.setBounds(366, 41, 135, 20);
 		contentPanel.add(dateNascimento);
 		
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"}));
+		comboBox.setSelectedIndex(14);
+		comboBox.setBounds(274, 92, 46, 25);
+		contentPanel.add(comboBox);
+		
+		JLabel lblUf = new JLabel("UF");
+		lblUf.setBounds(255, 96, 14, 16);
+		contentPanel.add(lblUf);
+		
 		
 	}
 	
 
 	
 	//Construtor para editar
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public TelaCadastroAluno(JFrame telaPrincipal, Aluno aluno) {
 		super(telaPrincipal,"Cadastro de Aluno",true);
 		this.aluno = aluno;
@@ -246,6 +263,12 @@ public class TelaCadastroAluno extends JDialog {
 		btnConcluir.addActionListener(new ConcluidoListener());
 		contentPanel.add(btnConcluir);
 		
+		comboBox = new JComboBox();
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"}));
+		comboBox.setSelectedIndex(14);
+		comboBox.setBounds(274, 92, 46, 25);
+		contentPanel.add(comboBox);
+		
 		dateNascimento = new JDateChooser("dd/MM/yyyy" , "##/##/####" ,' ');
 		
 	    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
@@ -301,7 +324,7 @@ public class TelaCadastroAluno extends JDialog {
 				Format formatter = new SimpleDateFormat("dd/MM/yyyy");
 				String data = formatter.format(dateNascimento.getDate());
 
-
+				aluno.setUf((String)comboBox.getSelectedItem());
 				aluno.setDataNascimento(data);
 				aluno.setMae(mae.getText());
 				aluno.setPai(pai.getText());
@@ -334,7 +357,7 @@ public class TelaCadastroAluno extends JDialog {
 				Format formatter = new SimpleDateFormat("dd/MM/yyyy");
 				String data = formatter.format(dateNascimento.getDate());
 				
-				Sistema.cadastraAluno(nome.getText(),matricula.getText(),data,rg.getText(),cpf.getText(),mae.getText(),pai.getText());
+				Sistema.cadastraAluno(nome.getText(),matricula.getText(),data,rg.getText(),cpf.getText(),mae.getText(),pai.getText(),(String)comboBox.getSelectedItem());
 				JOptionPane.showMessageDialog(classe(), "Aluno Cadastrado Com Sucesso");
 				limpar();
 			}catch (AlunoExistenteException e2) {

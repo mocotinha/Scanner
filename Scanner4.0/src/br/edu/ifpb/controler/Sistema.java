@@ -28,9 +28,7 @@ import br.edu.ifpb.model.Aluno;
 import br.edu.ifpb.model.AlunoExistenteException;
 import br.edu.ifpb.model.Curso;
 import br.edu.ifpb.model.CursoExistenteException;
-import br.edu.ifpb.model.DocumentoAcademico;
 import br.edu.ifpb.model.DocumentoDigital;
-import br.edu.ifpb.model.DocumentoPessoal;
 import br.edu.ifpb.model.Dossie;
 import br.edu.ifpb.model.Imagem;
 import br.edu.ifpb.model.Instituicao;
@@ -102,7 +100,7 @@ public class Sistema {
 	}
 
 	public static Imagem digitalizaImagem() {
-		SistemaDeDigitalizacao sd = SistemaDeDigitalizacao.getInstance();
+		SistemaDeDigitalizacao sd = new SistemaDeDigitalizacao();
 		try {
 			sd.capturaImagem();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -135,9 +133,9 @@ public class Sistema {
 
 	public static boolean verificarDisponibilidadeDoScanner() {	
 		try {
-			//TODO verificar se o scanner está disponível
+			//verificar se o scanner está disponível
 			@SuppressWarnings("unused")
-			SistemaDeDigitalizacao sisd = SistemaDeDigitalizacao.getInstance();
+			SistemaDeDigitalizacao sisd = new SistemaDeDigitalizacao();
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -241,7 +239,7 @@ public class Sistema {
 
 
 	public static void cadastraAluno(String nome, String matricula,String dataNascimento, String rg,
-			String cpf, String mae, String pai) throws Exception {
+			String cpf, String mae, String pai, String uf) throws Exception {
 		DAOAluno dao = new DAOAluno();
 		DAO.open();
 		DAO.begin();
@@ -253,6 +251,7 @@ public class Sistema {
 		aluno.setMae(mae);
 		aluno.setPai(pai);
 		aluno.setDataNascimento(dataNascimento);
+		aluno.setUf(uf);
 		Aluno aux;
 		try{
 			aux = dao.findByMatricula(matricula);
@@ -538,14 +537,17 @@ public class Sistema {
 
 	public static void cadastraDocumentoAoDossie(Dossie dossie, String titulo,
 			String classificacao, String descricao, String tipo) {
-		DocumentoDigital doc;
+		DocumentoDigital doc = new DocumentoDigital();
 		
 		if(tipo.equals("Documento Pessoal")){
-			doc = new DocumentoPessoal();
+			doc.setTipo("Documento Pessoal");
+			
 		}else{
-			doc = new DocumentoAcademico();
+			doc.setTipo("Documento Acadêmico");
+			
 		}
-		
+		doc.setImagens(imgs);
+		imgs.clear();
 		doc.setTitulo(titulo);
 		doc.setDescricao(descricao);
 		doc.setClassificacao(classificacao);
@@ -574,20 +576,20 @@ public class Sistema {
 	public static void atualizaDocumentos(Dossie dossie, String titulo, String classificacao, String descricao, String tipo, int index) {
 		DocumentoDigital doc = dossie.getDocumentos().get(index);
 		
-		if(!((doc instanceof DocumentoPessoal && tipo.equals("Documento Pessoal")) || (doc instanceof DocumentoAcademico && !tipo.equals("Documento Pessoal")))){
-			dossie.getDocumentos().remove(doc);
-			if(tipo.equals("Documento Pessoal")){
-				doc = new DocumentoPessoal();
-			}else{
-				doc = new DocumentoAcademico();
-			}
-			dossie.addDocumentoDigital(doc);
+		if(tipo.equals("Documento Pessoal")){
+			doc.setTipo("Documento Pessoal");
+			
+		}else{
+			doc.setTipo("Documento Acadêmico");
+			
 		}
-		
+
 		doc.setTitulo(titulo);
 		doc.setDescricao(descricao);
 		doc.setClassificacao(classificacao);
-		
+		doc.setUserResponsavel(user);
+		doc.setImagens(imgs);
+		imgs.clear();
 		
 		DAODossie dao = new DAODossie();
 		DAO.open();
@@ -595,6 +597,18 @@ public class Sistema {
 		dao.merge(dossie);
 		DAO.commit();
 		DAO.close();
+		
+	}
+
+
+	public static void removerImagem(Imagem elementAt) {
+		imgs.remove(elementAt);
+		
+	}
+
+
+	public static void setImagens(List<Imagem> imagens) {
+		imgs = imagens;
 		
 	}
 

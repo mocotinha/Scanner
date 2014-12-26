@@ -23,9 +23,8 @@ public class Imagem{
 	private String nomeArqEmDisco;
 	private double tamanho;
 	@ManyToOne
-	private DocumentoPessoal docPes;
-	@ManyToOne
-	private DocumentoAcademico docAca;
+	private DocumentoDigital doc;
+
 	
 	public Imagem(){}
 	
@@ -33,31 +32,15 @@ public class Imagem{
 		return id;
 	}
 	
-	public DocumentoPessoal getDocPes() {
-		return docPes;
+		public DocumentoDigital getDoc() {
+		return doc;
 	}
 
-	public void setDocPes(DocumentoPessoal docPes) {
-		this.docPes = docPes;
+	public void setDoc(DocumentoDigital doc) {
+		this.doc = doc;
 	}
 
-	public DocumentoAcademico getDocAc() {
-		return docAca;
-	}
-
-	public void setDocAc(DocumentoAcademico docAc) {
-		this.docAca = docAc;
-	}
-
-
-	public DocumentoPessoal getDoc() {
-		return this.docPes;
-	}
-	public void setDoc(DocumentoPessoal docPes) {
-		this.docPes = docPes;
-		
-	}
-	public byte[] getImagem() {
+		public byte[] getImagem() {
 		return imagem;
 	}
 	public void setImagem(byte[] imagem) {
@@ -97,6 +80,10 @@ public class Imagem{
 	public void setId(int id) {
 		this.id = id;
 		
+	}
+	@Override
+	public String toString() {
+		return "Imagem";
 	}
 	
 	
