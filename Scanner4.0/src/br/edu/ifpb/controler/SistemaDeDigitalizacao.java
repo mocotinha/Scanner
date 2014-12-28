@@ -7,6 +7,7 @@ import uk.co.mmscomputing.device.scanner.ScannerIOException;
 import uk.co.mmscomputing.device.scanner.ScannerIOMetadata;
 import uk.co.mmscomputing.device.scanner.ScannerIOMetadata.Type;
 import uk.co.mmscomputing.device.scanner.ScannerListener;
+import uk.co.mmscomputing.device.twain.TwainFailureException;
 
 public class SistemaDeDigitalizacao implements ScannerListener {
 	
@@ -14,12 +15,16 @@ public class SistemaDeDigitalizacao implements ScannerListener {
 	private Scanner scan;
 	ScannerIOMetadata.Type status = new Type();
 	
-	public SistemaDeDigitalizacao(){
+	public SistemaDeDigitalizacao() throws TwainFailureException, ScannerIOException, NotGetDeviceException{
+		getDevice();
 		
 	}
-	private void getDevice() throws  ScannerIOException{
-		Scanner scanner = null;
+	private void getDevice() throws  ScannerIOException, TwainFailureException, NotGetDeviceException{
+		Scanner scanner = null;         
 		scanner = Scanner.getDevice();
+		if(scanner == null){
+			throw new NotGetDeviceException();
+		}
 		scanner.addListener(this);
 		this.scan = scanner;
 		
@@ -39,8 +44,7 @@ public class SistemaDeDigitalizacao implements ScannerListener {
 		return scan;
 	}
 
-	public void capturaImagem() throws ScannerIOException, NotGetDeviceException{
-		this.getDevice();
+	public void capturaImagem() throws ScannerIOException, NotGetDeviceException, TwainFailureException{
 		this.scan.acquire();
 		while(!status.equals(ScannerIOMetadata.ACQUIRED)){
 			try {

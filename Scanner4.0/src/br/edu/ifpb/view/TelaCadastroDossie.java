@@ -3,6 +3,7 @@ package br.edu.ifpb.view;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +25,10 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import uk.co.mmscomputing.device.twain.TwainFailureException;
+import br.edu.ifpb.controler.NotGetDeviceException;
 import br.edu.ifpb.controler.Sistema;
-import br.edu.ifpb.model.DocumentoAcademico;
 import br.edu.ifpb.model.DocumentoDigital;
-import br.edu.ifpb.model.DocumentoPessoal;
 import br.edu.ifpb.model.Dossie;
 import br.edu.ifpb.model.Imagem;
 
@@ -346,8 +347,26 @@ public class TelaCadastroDossie extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Imagem img = Sistema.digitalizaImagem();
-			Sistema.adicionaImagem(img);
+			
+				Imagem img;
+				try {
+					img = Sistema.digitalizaImagem();
+					Sistema.adicionaImagem(img);
+				} catch (TwainFailureException e1) {
+					JOptionPane.showMessageDialog(classe(), "Scanner Não Identificado! Impossível Digitalizar Imagens!");
+					
+				} catch (NotGetDeviceException e1) {
+					JOptionPane.showMessageDialog(classe(), "Scanner Não Identificado! Impossível Digitalizar Imagens!");
+				} catch (IOException e1) {
+					JOptionPane.showMessageDialog(classe(), "Erro ao converter a Imagem!");
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(classe(), "Scanner Não Identificado! Impossível Digitalizar Imagens!");
+				}
+				
+				
+			
+		
+			
 			
 			
 			atualizaListaDeImagens();
@@ -423,6 +442,7 @@ public class TelaCadastroDossie extends JDialog {
 					JOptionPane.showMessageDialog(classe(), "Documento Cadastrado com Sucesso!");
 				}else{
 					Sistema.atualizaDocumentos(dossie,titulo.getText(),classificao.getText(), descricao.getText(),(String)tipo.getSelectedItem(),list.getSelectedIndex());
+					JOptionPane.showMessageDialog(classe(), "Documento Atualizado com Sucesso!");
 				}
 				
 				list = new JList();

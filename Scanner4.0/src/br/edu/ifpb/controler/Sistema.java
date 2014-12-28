@@ -99,9 +99,10 @@ public class Sistema {
 		return false;
 	}
 
-	public static Imagem digitalizaImagem() {
-		SistemaDeDigitalizacao sd = new SistemaDeDigitalizacao();
-		try {
+	public static Imagem digitalizaImagem() throws NotGetDeviceException, IOException, TwainFailureException {
+		
+	
+			SistemaDeDigitalizacao sd = new SistemaDeDigitalizacao();
 			sd.capturaImagem();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			BufferedImage bf = sd.getImagemCapturada();
@@ -120,13 +121,8 @@ public class Sistema {
 			img.setResolucao(bf.getWidth()+"X"+bf.getHeight()+"wxh");
 			img.setTamanho(imageInByte.length);
 			return img;
-		}catch(TwainFailureException e){
-			JOptionPane.showMessageDialog(null,"Scanner não identificado");
-		} catch (IOException | NotGetDeviceException e) {
-			JOptionPane.showMessageDialog(null,"Erro no Scanner");
-			
-		}
-		return null;
+		
+
 		
 		
 	}
@@ -546,7 +542,9 @@ public class Sistema {
 			doc.setTipo("Documento Acadêmico");
 			
 		}
-		doc.setImagens(imgs);
+		for (Imagem imagem : imgs) {
+			doc.addImagem(imagem);
+		}
 		imgs.clear();
 		doc.setTitulo(titulo);
 		doc.setDescricao(descricao);
@@ -588,8 +586,10 @@ public class Sistema {
 		doc.setDescricao(descricao);
 		doc.setClassificacao(classificacao);
 		doc.setUserResponsavel(user);
-		doc.setImagens(imgs);
-		imgs.clear();
+		for (Imagem imagem : imgs) {
+			imagem.setDoc(doc);
+		}
+		
 		
 		DAODossie dao = new DAODossie();
 		DAO.open();

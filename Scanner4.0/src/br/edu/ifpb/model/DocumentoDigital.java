@@ -119,15 +119,11 @@ public class DocumentoDigital{
 	}
 	
 	public void setImagens(List<Imagem> TmpImagens) {
-		int quantidade =  TmpImagens.size();
-		for (int i =0; i < quantidade; i++) {
-			addImagem(TmpImagens.get(i));
-		}
-		System.out.println(quantidade);
-		System.out.println(TmpImagens.size());
+		imagens = TmpImagens;
 	}
 
-	private void addImagem(Imagem imagem) {
+
+	public void addImagem(Imagem imagem) {
 		imagem.setDoc(this);
 		this.imagens.add(imagem);
 		
