@@ -157,8 +157,12 @@ public class TelaBuscaCurso extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			SistemaDeTelas.cadastroCurso(((CursoTableModel)table.getModel()).get(table.getSelectedRow()));
-			table.setModel(new CursoTableModel(Sistema.getCursos()));
+			if(table.getSelectedRow() == -1){
+				JOptionPane.showMessageDialog(classe(), "Selecione um Curso!");
+			}else{
+				SistemaDeTelas.cadastroCurso(((CursoTableModel)table.getModel()).get(table.getSelectedRow()));
+				table.setModel(new CursoTableModel(Sistema.getCursos()));
+			}
 			
 		}
 		

@@ -30,6 +30,9 @@ public class TelaCadastroCurso extends JDialog {
 	private JComboBox comboBox;
 
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public TelaCadastroCurso(JFrame telaPrincipal) {
 		
@@ -200,6 +203,10 @@ public class TelaCadastroCurso extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 			if(nome.getText().equals("")||nome.getText() == null){
 				JOptionPane.showMessageDialog(classe(), "O nome do curso não deve ser vazio!");
+				return;
+			}
+			if(comboBox.getSelectedIndex() == -1){
+				JOptionPane.showMessageDialog(classe(), "Você deve primeiro ter uma Instituição cadastrada, a instituição não pode ser vazia!");
 				return;
 			}
 			try{

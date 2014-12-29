@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -91,14 +92,21 @@ public class TelaBuscaUsuario extends JDialog {
 		}
 		
 	}
+	private TelaBuscaUsuario classe(){
+		return this;
+	}
 	
 	
 	private class EditarListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			SistemaDeTelas.cadastraUsuario(((UsuarioTableModel)table.getModel()).get(table.getSelectedRow()));
-			table.setModel(new UsuarioTableModel(Sistema.getUsuarios()));
+			if(table.getSelectedRow() == -1){
+				JOptionPane.showMessageDialog(classe(), "Selecione um Usuário!");
+			}else{
+				SistemaDeTelas.cadastraUsuario(((UsuarioTableModel)table.getModel()).get(table.getSelectedRow()));
+				table.setModel(new UsuarioTableModel(Sistema.getUsuarios()));
+			}
 			
 		}
 		

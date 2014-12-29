@@ -147,8 +147,13 @@ public class TelaBuscaAluno extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			SistemaDeTelas.cadastroAluno(((AlunoTableModel)table.getModel()).get(table.getSelectedRow()));
-			table.setModel(new AlunoTableModel(Sistema.getAlunos()));
+			if(table.getSelectedRow() == -1){
+				JOptionPane.showMessageDialog(classe(), "Selecione um Aluno!");
+			}else{
+				SistemaDeTelas.cadastroAluno(((AlunoTableModel)table.getModel()).get(table.getSelectedRow()));
+				table.setModel(new AlunoTableModel(Sistema.getAlunos()));
+			}
+			
 			
 		}
 		

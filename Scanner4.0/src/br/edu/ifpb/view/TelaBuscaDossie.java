@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -57,7 +58,7 @@ public class TelaBuscaDossie extends JDialog {
 				Point p = e.getPoint();
 				int row = table.rowAtPoint(p);
 				if(e.getClickCount() == 2){
-					SistemaDeTelas.cadastraDossie(((DossieTableModel)table.getModel()).get(row));
+					SistemaDeTelas.editaDossie(((DossieTableModel)table.getModel()).get(row));
 					table.setModel(new DossieTableModel(Sistema.getDossies()));
 				}
 				
@@ -106,12 +107,20 @@ public class TelaBuscaDossie extends JDialog {
 		
 	}*/
 	
+	private TelaBuscaDossie classe(){
+		return this;
+	}
+	
 	private class EditarListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			SistemaDeTelas.cadastraDossie(((DossieTableModel)table.getModel()).get(table.getSelectedRow()));
-			table.setModel(new DossieTableModel(Sistema.getDossies()));
+			if(table.getSelectedRow() == -1){
+				JOptionPane.showMessageDialog(classe(), "Selecione um Dossiê!");
+			}else{
+				SistemaDeTelas.editaDossie(((DossieTableModel)table.getModel()).get(table.getSelectedRow()));
+				table.setModel(new DossieTableModel(Sistema.getDossies()));
+			}
 			
 		}
 		

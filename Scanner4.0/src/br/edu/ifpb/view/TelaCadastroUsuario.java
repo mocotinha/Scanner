@@ -30,6 +30,9 @@ public class TelaCadastroUsuario extends JDialog {
 
 
 
+	/**
+	 * @wbp.parser.constructor
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroUsuario(JFrame principal) {
 		super(principal, "Cadastro de Usuários", true);
@@ -114,7 +117,8 @@ public class TelaCadastroUsuario extends JDialog {
 		getContentPane().add(lblLogin);
 		
 		JLabel lblPassword = new JLabel("Novo Password:");
-		lblPassword.setBounds(21, 100, 67, 14);
+		lblPassword.setBounds(21, 100, 80, 14);
+	
 		getContentPane().add(lblPassword);
 		
 		JLabel lblConfirmarPassword = new JLabel("Confirmar Password:");

@@ -40,6 +40,7 @@ public class TelaCadastroAluno extends JDialog {
 	@SuppressWarnings("rawtypes")
 	private JComboBox comboBox;
 
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroAluno(JFrame telaPrincipal) {
 		super(telaPrincipal,"Cadastro de Aluno",true);
@@ -149,6 +150,9 @@ public class TelaCadastroAluno extends JDialog {
 
 	
 	//Construtor para editar
+	/**
+	 * @wbp.parser.constructor
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public TelaCadastroAluno(JFrame telaPrincipal, Aluno aluno) {
 		super(telaPrincipal,"Cadastro de Aluno",true);
@@ -197,12 +201,16 @@ public class TelaCadastroAluno extends JDialog {
 		contentPanel.add(rg);
 		rg.setColumns(10);
 		
+		JLabel lblUf = new JLabel("UF");
+		lblUf.setBounds(255, 96, 14, 16);
+		contentPanel.add(lblUf);
+		
 		JLabel lblCpf = new JLabel("CPF:");
-		lblCpf.setBounds(259, 97, 46, 14);
+		lblCpf.setBounds(330, 97, 46, 14);
 		contentPanel.add(lblCpf);
 		
 		cpf = new JTextField();
-		cpf.setBounds(328, 94, 173, 20);
+		cpf.setBounds(377, 94, 124, 20);
 		cpf.setDocument(new LimitarCharacter(11));
 		cpf.setText(aluno.getCpf());
 		contentPanel.add(cpf);

@@ -58,9 +58,8 @@ public class TelaCadastroDossie extends JDialog {
 
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public TelaCadastroDossie(JFrame principal, Dossie dossie) {
+	public TelaCadastroDossie(JFrame principal, Dossie dossie, int acesso) {
 		super(principal,"Dossiê",true);
-		
 		Sistema.limpaImagens();
 		this.dossie = dossie;
 		Sistema.setImagens(new ArrayList<Imagem>());
@@ -183,10 +182,13 @@ public class TelaCadastroDossie extends JDialog {
 		btnLimpar.addActionListener(new LimparListener());
 		getContentPane().add(btnLimpar);
 		
-		JButton btnNovoDossi = new JButton("Novo Dossi\u00EA");
-		btnNovoDossi.setBounds(242, 522, 109, 26);
-		btnNovoDossi.addActionListener(new NovoDossieListener());
-		getContentPane().add(btnNovoDossi);
+		if(acesso == 0){
+			JButton btnNovoDossi = new JButton("Novo Dossi\u00EA");
+			btnNovoDossi.setBounds(242, 522, 109, 26);
+			btnNovoDossi.addActionListener(new NovoDossieListener());
+			getContentPane().add(btnNovoDossi);
+		}
+		
 		
 		JButton btnConcludo = new JButton("Cancelar");
 		btnConcludo.setBounds(606, 522, 98, 26);
@@ -506,7 +508,8 @@ public class TelaCadastroDossie extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			dispose();
+			Sistema.cadastroDossie();
 			
 		}
 		

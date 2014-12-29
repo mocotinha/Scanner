@@ -155,8 +155,12 @@ public class TelaBuscaInstituicao extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			SistemaDeTelas.cadastroInstituicao(((InstituicaoTableModel)table.getModel()).get(table.getSelectedRow()));
-			table.setModel(new InstituicaoTableModel(Sistema.getInstituicoes()));
+			if(table.getSelectedRow() == -1){
+				JOptionPane.showMessageDialog(classe(), "Selecione uma Instituição!");
+			}else{
+				SistemaDeTelas.cadastroInstituicao(((InstituicaoTableModel)table.getModel()).get(table.getSelectedRow()));
+				table.setModel(new InstituicaoTableModel(Sistema.getInstituicoes()));
+			}
 			
 		}
 		

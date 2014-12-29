@@ -155,7 +155,13 @@ public class SistemaDeTelas {
 	}
 
 	public static void cadastraDossie(Dossie dossie) {
-		TelaCadastroDossie tcd = new TelaCadastroDossie(telas.get(TELA_PRINCIPAL),dossie);
+		TelaCadastroDossie tcd = new TelaCadastroDossie(telas.get(TELA_PRINCIPAL),dossie,0);
+		tcd.setVisible(true);
+		
+	}
+	
+	public static void editaDossie(Dossie dossie) {
+		TelaCadastroDossie tcd = new TelaCadastroDossie(telas.get(TELA_PRINCIPAL),dossie,1);
 		tcd.setVisible(true);
 		
 	}
