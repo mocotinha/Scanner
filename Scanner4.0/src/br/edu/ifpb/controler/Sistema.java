@@ -71,7 +71,7 @@ public class Sistema {
 	public static String md5(String senha){  
 		MessageDigest md = null;
 		try {
-			md = MessageDigest.getInstance("MD5");
+			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -254,7 +254,7 @@ public class Sistema {
 		aluno.setUf(uf);
 		Aluno aux;
 		try{
-			aux = dao.findByMatricula(matricula);
+			aux = dao.findByInfo(matricula, nome, dataNascimento);
 		}catch(Exception e){
 			dao.persist(aluno);
 			DAO.flush();

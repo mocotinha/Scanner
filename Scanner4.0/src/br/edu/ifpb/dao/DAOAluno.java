@@ -26,5 +26,15 @@ public class DAOAluno extends DAO<Aluno>{
 		
 	}
 
+	public Aluno findByInfo(String matricula, String nome, String dataNascimento) {
+		Query q = getManager().createQuery("select a from Aluno a where a.matricula like :matricula and a.nome like :nome and a.dataNascimento like :dataNascimento" );
+		q.setParameter("matricula", matricula);
+		q.setParameter("nome", nome);
+		q.setParameter("dataNascimento", dataNascimento);
+		return (Aluno) q.getSingleResult();
+	}
+
+	
+
 
 }

@@ -258,8 +258,7 @@ public class TelaCadastroAluno extends JDialog {
 		try {
 			data = (Date)formatter.parse(aluno.getDataNascimento());
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			data = null;
 		}  
 	    
 		dateNascimento.setDate(data);
@@ -288,13 +287,10 @@ public class TelaCadastroAluno extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(matricula.getText().equals("")||matricula.getText() == null){
-				JOptionPane.showMessageDialog(classe(), "A matricula do aluno não pode ser vazia");
-				return;
-			}
 			
-			if(dateNascimento.getDate() == null){
-				JOptionPane.showMessageDialog(classe(), "A data de Nascimento não deve ser inválida");
+			
+			if(nome.getText() == null || nome.getText().equals("")){
+				JOptionPane.showMessageDialog(classe(), "O nome do aluno não pode ser vazio!");
 				return;
 			}
 			try{
@@ -304,7 +300,12 @@ public class TelaCadastroAluno extends JDialog {
 				aluno.setCpf(cpf.getText());
 
 				Format formatter = new SimpleDateFormat("dd/MM/yyyy");
-				String data = formatter.format(dateNascimento.getDate());
+				String data;
+				if(dateNascimento.getDate() != null){
+					 data = formatter.format(dateNascimento.getDate());
+				}else{
+					data = "";
+				}
 
 				aluno.setUf((String)comboBox.getSelectedItem());
 				aluno.setDataNascimento(data);
@@ -326,18 +327,21 @@ public class TelaCadastroAluno extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(matricula.getText().equals("")||matricula.getText() == null){
-				JOptionPane.showMessageDialog(classe(), "A matricula do aluno não pode ser vazia");
+			if(nome.getText() == null || nome.getText().equals("")){
+				JOptionPane.showMessageDialog(classe(), "O nome do aluno não pode ser vazio!");
 				return;
 			}
-			if(dateNascimento.getDate() == null){
-				JOptionPane.showMessageDialog(classe(), "A data de Nascimento não deve ser inválida");
-				return;
-			}
+			
 			try{
 				
 				Format formatter = new SimpleDateFormat("dd/MM/yyyy");
-				String data = formatter.format(dateNascimento.getDate());
+				String data;
+				if(dateNascimento.getDate() != null){
+					 data = formatter.format(dateNascimento.getDate());
+				}else{
+					data = "";
+				}
+				
 				
 				Sistema.cadastraAluno(nome.getText(),matricula.getText(),data,rg.getText(),cpf.getText(),mae.getText(),pai.getText(),(String)comboBox.getSelectedItem());
 				JOptionPane.showMessageDialog(classe(), "Aluno Cadastrado Com Sucesso");
@@ -346,6 +350,7 @@ public class TelaCadastroAluno extends JDialog {
 				JOptionPane.showMessageDialog(classe(), e2.getMessage());
 			}catch (Exception ex){
 				JOptionPane.showMessageDialog(classe(), "Erro ao Cadastrar o Aluno");
+				ex.printStackTrace();
 			}
 		}
 		

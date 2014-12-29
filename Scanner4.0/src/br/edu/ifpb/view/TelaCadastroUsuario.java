@@ -113,7 +113,7 @@ public class TelaCadastroUsuario extends JDialog {
 		lblLogin.setBounds(21, 62, 67, 14);
 		getContentPane().add(lblLogin);
 		
-		JLabel lblPassword = new JLabel("Password:");
+		JLabel lblPassword = new JLabel("Novo Password:");
 		lblPassword.setBounds(21, 100, 67, 14);
 		getContentPane().add(lblPassword);
 		
@@ -128,6 +128,11 @@ public class TelaCadastroUsuario extends JDialog {
 		tipo = new JComboBox();
 		tipo.setModel(new DefaultComboBoxModel(new String[] {"Administrador", "Arquivista"}));
 		tipo.setBounds(150, 185, 196, 20);
+		if(us.getTipo() == 1){
+			tipo.setSelectedIndex(0);
+		}else{
+			tipo.setSelectedIndex(1);
+		}
 		getContentPane().add(tipo);
 		
 		nome = new JTextField();
@@ -144,14 +149,11 @@ public class TelaCadastroUsuario extends JDialog {
 		
 		password = new JPasswordField();
 		password.setBounds(150, 97, 196, 17);
-		password.setEnabled(false);
-		password.setEditable(false);
 		getContentPane().add(password);
 		
 		password2 = new JPasswordField();
 		password2.setBounds(149, 138, 197, 20);
-		password2.setEnabled(false);
-		password2.setEditable(false);
+		
 		getContentPane().add(password2);
 		
 		JButton btnCadastrar = new JButton("Salvar");
@@ -188,6 +190,15 @@ public class TelaCadastroUsuario extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(nome.getText().equals("") || nome.getText() == null){
+				JOptionPane.showMessageDialog(classe(), "O nome do usuário deve ser preenchido!");
+				return;
+			}else if(login.getText().equals("") || login.getText() == null){
+				JOptionPane.showMessageDialog(classe(), "O login do usuário deve ser preenchido!");
+				return;
+			}
+			
+			
 			try{
 				us.setNome(nome.getText());
 				us.setLogin(login.getText());
@@ -195,6 +206,23 @@ public class TelaCadastroUsuario extends JDialog {
 					us.setTipo(1);
 				}else{
 					us.setTipo(0);
+				}
+				if(password.getPassword().length != 0){
+					String p1 = new String(password.getPassword());
+					String p2 = new String(password2.getPassword());
+					if(!p1.equals(p2)){
+						JOptionPane.showMessageDialog(classe(), "Os passwords devem ser iguais!");
+						password.setText("");
+						password2.setText("");
+						return;
+					}if(p1.length() < 5){
+						JOptionPane.showMessageDialog(classe(), "O password deve possuir 5 ou mais caracteres!");
+						password.setText("");
+						password2.setText("");
+						return;
+					}
+						us.setSenha(Sistema.md5(new String(password.getPassword())));
+					
 				}
 				Sistema.atualizaUsuario(us);
 				dispose();
@@ -211,12 +239,30 @@ public class TelaCadastroUsuario extends JDialog {
 	
 	private class CadastrarListener implements ActionListener{
 
-		/*
-		 * Tipo 1 representa Administrador e Tipo 2 representa Arquivista
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
-		@Override
+		
 		public void actionPerformed(ActionEvent e) {
+			if(nome.getText().equals("") || nome.getText() == null){
+				JOptionPane.showMessageDialog(classe(), "O nome do usuário deve ser preenchido!");
+				return;
+			}else if(login.getText().equals("") || login.getText() == null){
+				JOptionPane.showMessageDialog(classe(), "O login do usuário deve ser preenchido!");
+				return;
+			}
+			String p1 = new String(password.getPassword());
+			String p2 = new String(password2.getPassword());
+			if(!p1.equals(p2)){
+				JOptionPane.showMessageDialog(classe(), "Os passwords devem ser iguais!");
+				password.setText("");
+				password2.setText("");
+				return;
+			}
+			if(p1.length() < 5){
+				JOptionPane.showMessageDialog(classe(), "O password deve possuir 5 ou mais caracteres!");
+				password.setText("");
+				password2.setText("");
+				return;
+			}
+			
 			try{
 				if(tipo.getSelectedItem().equals("Administrador")){
 					Sistema.cadastraUsuario(nome.getText(), login.getText(), new String(password.getPassword()),1);
