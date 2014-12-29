@@ -63,9 +63,10 @@ public class TelaBuscaCurso extends JDialog {
 					int row = table.rowAtPoint(p);
 					if(e.getClickCount() == 2){
 						Sistema.setCurso(((CursoTableModel)table.getModel()).get(row));
+						dispose();
 						TelaBuscaAluno tba = new TelaBuscaAluno(classePrincipal(),1);
 						tba.setVisible(true);
-						dispose();
+						
 					}
 					
 				}

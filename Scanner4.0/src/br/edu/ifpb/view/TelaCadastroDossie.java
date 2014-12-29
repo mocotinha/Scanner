@@ -385,7 +385,7 @@ public class TelaCadastroDossie extends JDialog {
 				} catch (IOException e1) {
 					JOptionPane.showMessageDialog(classe(), "Erro ao converter a Imagem!");
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(classe(), "Scanner Não Identificado! Impossível Digitalizar Imagens!");
+					JOptionPane.showMessageDialog(classe(), "Não Foi Possível Digitalizar a Imagem!");
 				}
 				
 				

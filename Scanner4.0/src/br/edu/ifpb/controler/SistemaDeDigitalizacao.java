@@ -8,12 +8,16 @@ import uk.co.mmscomputing.device.scanner.ScannerIOMetadata;
 import uk.co.mmscomputing.device.scanner.ScannerIOMetadata.Type;
 import uk.co.mmscomputing.device.scanner.ScannerListener;
 import uk.co.mmscomputing.device.twain.TwainFailureException;
+import uk.co.mmscomputing.device.twain.TwainNativeLoadStrategySingleton;
+import uk.co.mmscomputing.device.twain.TwainSource;
+import uk.co.mmscomputing.device.twain.jtwain;
 
 public class SistemaDeDigitalizacao implements ScannerListener {
 	
 	private BufferedImage imagemCapturada = null;
 	private Scanner scan;
-	ScannerIOMetadata.Type status = new Type();
+	ScannerIOMetadata status;
+	ScannerIOMetadata.Type status2 = new Type();
 	
 	public SistemaDeDigitalizacao() throws TwainFailureException, ScannerIOException, NotGetDeviceException{
 		getDevice();
@@ -21,10 +25,11 @@ public class SistemaDeDigitalizacao implements ScannerListener {
 	}
 	private void getDevice() throws  ScannerIOException, TwainFailureException, NotGetDeviceException{
 		Scanner scanner = null;         
-		scanner = Scanner.getDevice();
-		if(scanner == null){
+		scanner = Scanner.getDevice();	
+		
+		if(jtwain.getSource().getId() == 0 && jtwain.getSource().getManufacturer().equals("")){
 			throw new NotGetDeviceException();
-		}
+		}	
 		scanner.addListener(this);
 		this.scan = scanner;
 		
@@ -36,7 +41,10 @@ public class SistemaDeDigitalizacao implements ScannerListener {
         	
             //neste ponto o documento foi totalmente digitalizado
             this.imagemCapturada = siom.getImage();
-            status = type; 
+            status2 = type; 
+
+        }else if(type.equals(ScannerIOMetadata.STATECHANGE)){
+        	status = siom;
         }
     }
 	
@@ -46,12 +54,16 @@ public class SistemaDeDigitalizacao implements ScannerListener {
 
 	public void capturaImagem() throws ScannerIOException, NotGetDeviceException, TwainFailureException{
 		this.scan.acquire();
-		while(!status.equals(ScannerIOMetadata.ACQUIRED)){
+	
+		while(!status2.equals(ScannerIOMetadata.ACQUIRED)){
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				
 				e.printStackTrace();
+			}
+			if(status.isFinished()){
+				break;
 			}
 		}
 
