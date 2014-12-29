@@ -27,22 +27,7 @@ public class TelaCadastroUsuario extends JDialog {
 	private JComboBox tipo;
 	private Usuario us;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			TelaCadastroUsuario dialog = new TelaCadastroUsuario(null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
-	/**
-	 * Create the dialog.
-	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroUsuario(JFrame principal) {
 		super(principal, "Cadastro de Usuários", true);

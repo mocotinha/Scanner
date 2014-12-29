@@ -2,6 +2,7 @@ package br.edu.ifpb.controler;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -15,6 +16,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 //import ifpb.scanner.dao2.*;
 import javax.swing.JOptionPane;
+
+import org.apache.commons.io.FileUtils;
 
 import uk.co.mmscomputing.device.twain.TwainFailureException;
 import br.edu.ifpb.dao.DAO;
@@ -35,6 +38,7 @@ import br.edu.ifpb.model.Instituicao;
 import br.edu.ifpb.model.InstituicaoExistenteException;
 import br.edu.ifpb.model.Usuario;
 import br.edu.ifpb.model.UsuarioExistenteException;
+import br.edu.ifpb.view.TelaCadastroDossie;
 
 public class Sistema {
 	
@@ -407,6 +411,16 @@ public class Sistema {
 
 	public static void setInstituicao(Instituicao instituicao) {
 		setDados("instituicao", instituicao);
+		
+	}
+	
+	public static byte[] fileToByteArray(TelaCadastroDossie tela,File e){
+		try {
+			return FileUtils.readFileToByteArray(e);
+		} catch (IOException e1) {
+			JOptionPane.showMessageDialog(tela, "Erro ao carregar e converter a Imagem!");
+		}
+		return null;
 		
 	}
 

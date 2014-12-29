@@ -3,6 +3,7 @@ package br.edu.ifpb.view;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -53,6 +55,7 @@ public class TelaCadastroDossie extends JDialog {
 	private JScrollPane scrollPane_1;
 	private JScrollPane scrollPane_2 ;
 	private boolean status = true;
+	private JButton selImagem;
 
 	/**
 	 * Launch the application.
@@ -247,6 +250,11 @@ public class TelaCadastroDossie extends JDialog {
 		JLabel lblDocumentos = new JLabel("Documentos:");
 		lblDocumentos.setBounds(509, 99, 90, 14);
 		getContentPane().add(lblDocumentos);
+		
+		selImagem = new JButton("Selecionar Imagem");
+		selImagem.addActionListener(new SelecionaArquivoListener());
+		selImagem.setBounds(287, 384, 202, 26);
+		getContentPane().add(selImagem);
 
 	}
 	
@@ -258,6 +266,42 @@ public class TelaCadastroDossie extends JDialog {
 		lista.addListSelectionListener(new SelecionarImagemListener());
 		lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		((JScrollPane) scrollPane_1).setViewportView(lista);
+	}
+	private class SelecionaArquivoListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			
+			
+			JFileChooser chooser = new JFileChooser();
+		    chooser.setFileFilter(new ImageFilter());
+		    chooser.setAcceptAllFileFilterUsed(false);
+		    int returnVal = chooser.showOpenDialog(classe());
+		    if(returnVal == JFileChooser.APPROVE_OPTION) {
+		    	File a = chooser.getSelectedFile();
+		    	Imagem img = new Imagem();
+		    	byte imageInByte[] = Sistema.fileToByteArray(classe(), a);
+		    	img.setImagem(imageInByte);
+		    	img.setFormato(Utils.getExtension(a));
+		    	
+		    	int total = 0;
+				for (int i = 0; i < imageInByte.length; i++) {
+					total+=imageInByte[i];
+				}
+				
+				img.setChecksum(total);
+				img.setResolucao("Resolução Indisponível");
+				img.setTamanho(imageInByte.length);
+				img.setNomeArqEmDisco(a.getName());
+				Sistema.adicionaImagem(img);
+		    }
+		    
+			atualizaListaDeImagens();
+			
+			
+		}
+		
 	}
 	
 	private class DocumentoSelecionadoListener implements ListSelectionListener{
@@ -436,6 +480,10 @@ public class TelaCadastroDossie extends JDialog {
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(titulo.getText().equals("") || titulo.getText()==null){
+				JOptionPane.showMessageDialog(classe(), "O Titulo do Documento deve ser informado!");
+				return;
+			}
 			try{
 				if(status){
 					Sistema.cadastraDocumentoAoDossie(dossie,titulo.getText(),classificao.getText(), descricao.getText(),(String)tipo.getSelectedItem());
