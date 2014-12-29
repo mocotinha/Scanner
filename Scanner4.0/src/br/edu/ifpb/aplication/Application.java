@@ -26,7 +26,7 @@ public class Application {
 			dao.findByLogin("admin");
 		}catch(Exception e){
 			Usuario user = new Usuario();
-			user.setNome("Fausto");
+			user.setNome("FAUSTO");
 			user.setLogin("admin");
 			user.setSenha(Sistema.md5("123"));
 			dao.persist(user);

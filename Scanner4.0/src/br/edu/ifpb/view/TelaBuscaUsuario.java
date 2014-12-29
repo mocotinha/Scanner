@@ -1,8 +1,10 @@
 package br.edu.ifpb.view;
 
-import java.awt.EventQueue;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,26 +23,7 @@ public class TelaBuscaUsuario extends JDialog {
 	private JTable table;
 	private JTextField textField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaBuscaUsuario dialog = new TelaBuscaUsuario(null);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the dialog.
-	 */
 	public TelaBuscaUsuario(JFrame principal) {
 		super(principal, "Usuarios", true);
 		setBounds(100, 100, 800, 312);
@@ -51,6 +34,7 @@ public class TelaBuscaUsuario extends JDialog {
 		getContentPane().add(lblBuscar);
 		
 		textField = new JTextField();
+		textField.setDocument(new LimitarMaiusculas());
 		textField.setBounds(65, 19, 563, 20);
 		getContentPane().add(textField);
 		textField.setColumns(10);
@@ -66,6 +50,23 @@ public class TelaBuscaUsuario extends JDialog {
 		
 		
 		table = new JTable(new UsuarioTableModel(Sistema.getUsuarios()));
+		table.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				Point p = e.getPoint();
+				int row = table.rowAtPoint(p);
+				if(e.getClickCount() == 2){
+					SistemaDeTelas.cadastraUsuario(((UsuarioTableModel)table.getModel()).get(row));
+					table.setModel(new UsuarioTableModel(Sistema.getUsuarios()));
+				}
+				
+			}
+			public void mouseClicked(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {}
+		});
 		scrollPane.setViewportView(table);
 		
 		
@@ -74,7 +75,7 @@ public class TelaBuscaUsuario extends JDialog {
 		btnEditar.addActionListener(new EditarListener());
 		getContentPane().add(btnEditar);
 		
-		JButton btnConcluido = new JButton("Concluido");
+		JButton btnConcluido = new JButton("Cancelar");
 		btnConcluido.setBounds(623, 230, 98, 26);
 		btnConcluido.addActionListener(new ConcluidoListener());
 		getContentPane().add(btnConcluido);

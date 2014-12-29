@@ -1,13 +1,17 @@
 package br.edu.ifpb.view;
 
-import java.awt.EventQueue;
+
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -21,27 +25,8 @@ public class TelaBuscaAluno extends JDialog {
 	private JTextField textField;
 	private JTable table;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaBuscaCurso dialog = new TelaBuscaCurso(null);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the dialog.
-	 */
-	public TelaBuscaAluno(JFrame principal) {
+	public TelaBuscaAluno(JFrame principal, int tipo) {
 		super(principal, "Alunos", true);
 		setBounds(100, 100, 800, 312);
 		getContentPane().setLayout(null);
@@ -64,21 +49,65 @@ public class TelaBuscaAluno extends JDialog {
 		scrollPane.setBounds(10, 60, 750, 158);
 		getContentPane().add(scrollPane);
 		
-		
 		table = new JTable(new AlunoTableModel(Sistema.getAlunos()));
+		
+		if(tipo == 1){
+			table.addMouseListener(new MouseListener() {
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					Point p = e.getPoint();
+					int row = table.rowAtPoint(p);
+					if(e.getClickCount() == 2){
+						Sistema.setAluno(((AlunoTableModel)table.getModel()).get(row));
+						dispose();
+						Sistema.validacaoParaCadastroDossie();
+					}
+					
+				}
+				public void mouseClicked(MouseEvent e) {}
+				public void mouseEntered(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+				public void mouseReleased(MouseEvent e) {}
+			});
+		}else{
+		
+			table.addMouseListener(new MouseListener() {
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					Point p = e.getPoint();
+					int row = table.rowAtPoint(p);
+					if(e.getClickCount() == 2){
+						SistemaDeTelas.cadastroAluno(((AlunoTableModel)table.getModel()).get(row));
+						table.setModel(new AlunoTableModel(Sistema.getAlunos()));
+					}
+					
+				}
+				public void mouseClicked(MouseEvent e) {}
+				public void mouseEntered(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+				public void mouseReleased(MouseEvent e) {}
+			});
+		
+		}
+		
 		scrollPane.setViewportView(table);
 		
-		JButton btnSelecionar = new JButton("Selecionar");
-		btnSelecionar.setBounds(48, 230, 98, 26);
-		btnSelecionar.addActionListener(new SelecionarListener());
-		getContentPane().add(btnSelecionar);
+		if(tipo == 1){
+			JButton btnSelecionar = new JButton("Selecionar");
+			btnSelecionar.setBounds(48, 230, 98, 26);
+			btnSelecionar.addActionListener(new SelecionarListener());
+			getContentPane().add(btnSelecionar);
+		}
+		
 		
 		JButton btnEditar = new JButton("Editar");
 		btnEditar.setBounds(305, 230, 98, 26);
 		btnEditar.addActionListener(new EditarListener());
 		getContentPane().add(btnEditar);
 		
-		JButton btnConcluido = new JButton("Concluido");
+		JButton btnConcluido = new JButton("Cancelar");
 		btnConcluido.setBounds(623, 230, 98, 26);
 		btnConcluido.addActionListener(new ConcluidoListener());
 		getContentPane().add(btnConcluido);
@@ -94,13 +123,21 @@ public class TelaBuscaAluno extends JDialog {
 		}
 		
 	}
+	private TelaBuscaAluno classe(){
+		return this;
+	}
 	
 	private class SelecionarListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Sistema.setAluno(((AlunoTableModel)table.getModel()).get(table.getSelectedRow()));
-			dispose();
+			if(table.getSelectedRow() == -1){
+				JOptionPane.showMessageDialog(classe(), "Selecione um Aluno!");
+			}else{
+				Sistema.setAluno(((AlunoTableModel)table.getModel()).get(table.getSelectedRow()));
+				dispose();
+				Sistema.validacaoParaCadastroDossie();
+			}
 			
 		}
 		

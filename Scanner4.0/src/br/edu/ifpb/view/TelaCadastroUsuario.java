@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.model.Usuario;
 import br.edu.ifpb.model.UsuarioExistenteException;
+import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class TelaCadastroUsuario extends JDialog {
@@ -28,6 +29,7 @@ public class TelaCadastroUsuario extends JDialog {
 	private Usuario us;
 
 
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroUsuario(JFrame principal) {
 		super(principal, "Cadastro de Usuários", true);
@@ -35,6 +37,7 @@ public class TelaCadastroUsuario extends JDialog {
 		getContentPane().setLayout(null);
 		
 		JLabel lblNome = new JLabel("Nome:");
+		lblNome.setFont(new Font("Arial", Font.PLAIN, 14));
 		lblNome.setBounds(21, 25, 67, 14);
 		getContentPane().add(lblNome);
 		
@@ -60,6 +63,7 @@ public class TelaCadastroUsuario extends JDialog {
 		getContentPane().add(tipo);
 		
 		nome = new JTextField();
+		nome.setDocument(new LimitarMaiusculas());
 		nome.setBounds(150, 22, 196, 20);
 		getContentPane().add(nome);
 		nome.setColumns(10);

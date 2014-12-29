@@ -1,6 +1,5 @@
 package br.edu.ifpb.view;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -57,27 +56,7 @@ public class TelaCadastroDossie extends JDialog {
 	private boolean status = true;
 	private JButton selImagem;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaCadastroDossie dialog = new TelaCadastroDossie(null,null);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the dialog.
-	 * @param dossie 
-	 */
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroDossie(JFrame principal, Dossie dossie) {
 		super(principal,"Dossiê",true);

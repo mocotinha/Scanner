@@ -1,13 +1,16 @@
 package br.edu.ifpb.view;
 
-import java.awt.EventQueue;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -20,29 +23,12 @@ import br.edu.ifpb.model.table.InstituicaoTableModel;
 public class TelaBuscaInstituicao extends JDialog {
 	private JTextField textField;
 	private JTable table;
+	private JFrame principal;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaBuscaInstituicao dialog = new TelaBuscaInstituicao(null);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the dialog.
-	 */
-	public TelaBuscaInstituicao(JFrame principal) {
+	public TelaBuscaInstituicao(JFrame principal, int tipo) {
 		super(principal, "Instituições", true);
+		this.principal = principal;
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(null);
 		
@@ -51,6 +37,7 @@ public class TelaBuscaInstituicao extends JDialog {
 		getContentPane().add(lblBuscar);
 		
 		textField = new JTextField();
+		textField.setDocument(new LimitarMaiusculas());
 		textField.setBounds(88, 26, 209, 20);
 		getContentPane().add(textField);
 		textField.setColumns(10);
@@ -65,23 +52,70 @@ public class TelaBuscaInstituicao extends JDialog {
 		getContentPane().add(scrollPane);
 		
 		table = new JTable(new InstituicaoTableModel(Sistema.getInstituicoes()));
-		scrollPane.setViewportView(table);
+		if(tipo==1){
+			table.addMouseListener(new MouseListener() {
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					Point p = e.getPoint();
+					int row = table.rowAtPoint(p);
+					if(e.getClickCount() == 2){
+						Sistema.setInstituicao(((InstituicaoTableModel)table.getModel()).get(row));
+						dispose();
+						TelaBuscaCurso tbc = new TelaBuscaCurso(classePrincipal(),1);
+						tbc.setVisible(true);
+					}
+					
+				}
+				public void mouseClicked(MouseEvent e) {}
+				public void mouseEntered(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+				public void mouseReleased(MouseEvent e) {}
+			});
+		}else{
+			table.addMouseListener(new MouseListener() {
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+					Point p = e.getPoint();
+					int row = table.rowAtPoint(p);
+					if(e.getClickCount() == 2){
+						SistemaDeTelas.cadastroInstituicao(((InstituicaoTableModel)table.getModel()).get(row));
+						table.setModel(new InstituicaoTableModel(Sistema.getInstituicoes()));
+						
+					}
+					
+				}
+				public void mouseClicked(MouseEvent e) {}
+				public void mouseEntered(MouseEvent e) {}
+				public void mouseExited(MouseEvent e) {}
+				public void mouseReleased(MouseEvent e) {}
+			});
+		}
 		
-		JButton btnSelecionar = new JButton("Selecionar");
-		btnSelecionar.setBounds(23, 224, 98, 26);
-		btnSelecionar.addActionListener(new SelecionarListener());
-		getContentPane().add(btnSelecionar);
+		scrollPane.setViewportView(table);
+		if(tipo == 1){
+			JButton btnSelecionar = new JButton("Selecionar");
+			btnSelecionar.setBounds(23, 224, 98, 26);
+			btnSelecionar.addActionListener(new SelecionarListener());
+			getContentPane().add(btnSelecionar);
+		}
+		
 		
 		JButton btnEditar = new JButton("Editar");
 		btnEditar.setBounds(166, 224, 98, 26);
 		btnEditar.addActionListener(new EditarListener());
 		getContentPane().add(btnEditar);
 		
-		JButton btnConcluir = new JButton("Concluir");
+		JButton btnConcluir = new JButton("Cancelar");
 		btnConcluir.setBounds(326, 224, 98, 26);
 		btnConcluir.addActionListener(new ConcluidoListener());
 		getContentPane().add(btnConcluir);
 
+	}
+	
+	private JFrame classePrincipal(){
+		return this.principal;
 	}
 	
 	private class BuscarListener implements ActionListener{
@@ -93,13 +127,25 @@ public class TelaBuscaInstituicao extends JDialog {
 		}
 		
 	}
+
+	private TelaBuscaInstituicao classe(){
+		return this;
+	}
 	
 	private class SelecionarListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Sistema.setInstituicao(((InstituicaoTableModel)table.getModel()).get(table.getSelectedRow()));
-			dispose();
+			if(table.getSelectedRow() == -1){
+				JOptionPane.showMessageDialog(classe(), "Selecione uma Instituição!");
+			}else{
+				Sistema.setInstituicao(((InstituicaoTableModel)table.getModel()).get(table.getSelectedRow()));
+				dispose();
+				TelaBuscaCurso tbc = new TelaBuscaCurso(principal,1);
+				tbc.setVisible(true);
+			}
+			
+			
 			
 		}
 		

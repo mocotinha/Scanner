@@ -8,7 +8,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,9 +24,6 @@ import br.edu.ifpb.model.Aluno;
 import br.edu.ifpb.model.AlunoExistenteException;
 
 import com.toedter.calendar.JDateChooser;
-
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 
 @SuppressWarnings("serial")
 public class TelaCadastroAluno extends JDialog {
@@ -41,23 +40,6 @@ public class TelaCadastroAluno extends JDialog {
 	@SuppressWarnings("rawtypes")
 	private JComboBox comboBox;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			TelaCadastroAluno dialog = new TelaCadastroAluno(null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 * @wbp.parser.constructor
-	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroAluno(JFrame telaPrincipal) {
 		super(telaPrincipal,"Cadastro de Aluno",true);

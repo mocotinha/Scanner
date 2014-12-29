@@ -1,8 +1,10 @@
 package br.edu.ifpb.view;
 
-import java.awt.EventQueue;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -13,33 +15,15 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 
 import br.edu.ifpb.controler.Sistema;
-import br.edu.ifpb.model.table.DocumentoDigitalTableModel;
+import br.edu.ifpb.controler.SistemaDeTelas;
+import br.edu.ifpb.model.table.DossieTableModel;
 
 @SuppressWarnings("serial")
 public class TelaBuscaDossie extends JDialog {
 	private JTextField textField;
 	private JTable table;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaBuscaDossie dialog = new TelaBuscaDossie(null);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the dialog.
-	 */
 	public TelaBuscaDossie(JFrame principal) {
 		super(principal, "Dossiê", true);
 		
@@ -56,6 +40,7 @@ public class TelaBuscaDossie extends JDialog {
 		textField.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.addActionListener(new BuscarDossieActionListener());
 		btnBuscar.setBounds(655, 16, 98, 26);
 		getContentPane().add(btnBuscar);
 		
@@ -64,27 +49,54 @@ public class TelaBuscaDossie extends JDialog {
 		getContentPane().add(scrollPane);
 		
 		
-		table = new JTable(new DocumentoDigitalTableModel(Sistema.getDocumentosDigitais()));
+		table = new JTable(new DossieTableModel(Sistema.getDossies()));
+		table.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				Point p = e.getPoint();
+				int row = table.rowAtPoint(p);
+				if(e.getClickCount() == 2){
+					SistemaDeTelas.cadastraDossie(((DossieTableModel)table.getModel()).get(row));
+					table.setModel(new DossieTableModel(Sistema.getDossies()));
+				}
+				
+			}
+			public void mouseClicked(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {}
+		});
 		scrollPane.setViewportView(table);
 		
-		JButton btnSelecionar = new JButton("Selecionar");
+		/*JButton btnSelecionar = new JButton("Selecionar");
 		btnSelecionar.setBounds(48, 230, 98, 26);
 		btnSelecionar.addActionListener(new SelecionarListener());
-		getContentPane().add(btnSelecionar);
+		getContentPane().add(btnSelecionar);*/
 		
 		JButton btnEditar = new JButton("Editar");
 		btnEditar.setBounds(305, 230, 98, 26);
 		btnEditar.addActionListener(new EditarListener());
 		getContentPane().add(btnEditar);
 		
-		JButton btnConcluido = new JButton("Concluido");
+		JButton btnConcluido = new JButton("Cancelar");
 		btnConcluido.setBounds(623, 230, 98, 26);
 		btnConcluido.addActionListener(new ConcluidoListener());
 		getContentPane().add(btnConcluido);
 
 	}
 	
-	private class SelecionarListener implements ActionListener{
+	private class BuscarDossieActionListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			table.setModel(new DossieTableModel(Sistema.getDossiePorValor(textField.getText())));
+			
+		}
+		
+	}
+	
+	/*private class SelecionarListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -92,13 +104,14 @@ public class TelaBuscaDossie extends JDialog {
 			
 		}
 		
-	}
+	}*/
 	
 	private class EditarListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			SistemaDeTelas.cadastraDossie(((DossieTableModel)table.getModel()).get(table.getSelectedRow()));
+			table.setModel(new DossieTableModel(Sistema.getDossies()));
 			
 		}
 		
@@ -108,7 +121,7 @@ public class TelaBuscaDossie extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
+			dispose();
 			
 		}
 		

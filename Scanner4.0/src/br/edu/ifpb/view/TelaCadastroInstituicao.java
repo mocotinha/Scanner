@@ -1,6 +1,5 @@
 package br.edu.ifpb.view;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,26 +19,7 @@ public class TelaCadastroInstituicao extends JDialog {
 	private JTextField nome;
 	private Instituicao instituicao;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaCadastroInstituicao dialog = new TelaCadastroInstituicao(null);
-					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-					dialog.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the dialog.
-	 */
 	public TelaCadastroInstituicao(JFrame principal) {
 		super(principal, "Cadastro de Instituições", true);
 		setBounds(100, 100, 450, 300);

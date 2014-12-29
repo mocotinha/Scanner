@@ -2,7 +2,6 @@ package br.edu.ifpb.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -31,30 +30,10 @@ public class TelaLogin extends JFrame {
 	private JPasswordField password;
 	
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TelaLogin frame = new TelaLogin();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
 	public TelaLogin() {
 		configurePLAF();
 		addWindowListener(new WindowAdapter() {
@@ -98,6 +77,7 @@ public class TelaLogin extends JFrame {
 		login = new JTextField();
 		pb.add(login,CC.xy(4, 6));
 		password = new JPasswordField();
+		password.addActionListener(new LoginListener());
 		pb.add(password,CC.xy(4, 8));
 		info = new JLabel("");
 	    info.setForeground(Color.RED);

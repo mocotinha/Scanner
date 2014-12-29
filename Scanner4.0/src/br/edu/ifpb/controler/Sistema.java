@@ -461,6 +461,11 @@ public class Sistema {
 	public static void cadastroDossie() {
 		limpaRegistroDossie();
 		SistemaDeTelas.cadastroDossie();
+			
+		
+	}
+	
+	public static void validacaoParaCadastroDossie(){
 		Dossie dossie = new Dossie();
 		if(dados.get("aluno") == null){
 			JOptionPane.showMessageDialog(null, "Você Não Selecionou um Aluno");
@@ -497,8 +502,6 @@ public class Sistema {
 		DAO.close();
 		
 		SistemaDeTelas.cadastraDossie(aux);
-		
-		
 	}
 
 
@@ -624,6 +627,28 @@ public class Sistema {
 	public static void setImagens(List<Imagem> imagens) {
 		imgs = imagens;
 		
+	}
+
+
+	public static List<Dossie> getDossies() {
+		DAODossie dao = new DAODossie();
+		DAO.open();
+		DAO.begin();
+		List<Dossie> a = dao.findAll();
+		DAO.commit();
+		DAO.close();
+		return a;
+	}
+
+
+	public static List<Dossie> getDossiePorValor(String text) {
+		DAODossie dao = new DAODossie();
+		DAO.open();
+		DAO.begin();
+		List<Dossie> a = dao.findByValores(text);
+		DAO.commit();
+		DAO.close();
+		return a;
 	}
 
 
