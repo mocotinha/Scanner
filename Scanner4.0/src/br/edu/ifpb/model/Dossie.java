@@ -22,6 +22,7 @@ public class Dossie {
 	private int id;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataIncio;
+	private String classificacao;
 	@ManyToOne
 	private Instituicao instituicao;
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="dossie",fetch=FetchType.EAGER)
@@ -31,6 +32,15 @@ public class Dossie {
 	@ManyToOne
 	private Curso curso;
 	
+	
+	public String getClassificacao() {
+		return classificacao;
+	}
+
+	public void setClassificacao(String classificacao) {
+		this.classificacao = classificacao;
+	}
+
 	public Dossie() {}
 
 	public int getId() {

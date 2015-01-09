@@ -9,7 +9,6 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -24,10 +23,12 @@ import br.edu.ifpb.model.table.AlunoTableModel;
 public class TelaBuscaAluno extends JDialog {
 	private JTextField textField;
 	private JTable table;
+	private TelaPrincipal principal;
 
 
-	public TelaBuscaAluno(JFrame principal, int tipo) {
+	public TelaBuscaAluno(final TelaPrincipal principal, int tipo) {
 		super(principal, "Alunos", true);
+		this.principal = principal;
 		setBounds(100, 100, 800, 312);
 		getContentPane().setLayout(null);
 		
@@ -36,9 +37,11 @@ public class TelaBuscaAluno extends JDialog {
 		getContentPane().add(lblBuscar);
 		
 		textField = new JTextField();
+		textField.setDocument(new LimitarMaiusculas());
 		textField.setBounds(65, 19, 563, 20);
 		getContentPane().add(textField);
 		textField.setColumns(10);
+		textField.addActionListener(new BuscarListener());
 		
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.setBounds(655, 16, 98, 26);
@@ -61,7 +64,9 @@ public class TelaBuscaAluno extends JDialog {
 					if(e.getClickCount() == 2){
 						Sistema.setAluno(((AlunoTableModel)table.getModel()).get(row));
 						dispose();
-						Sistema.validacaoParaCadastroDossie();
+						TelaClassificacao tc = new TelaClassificacao(principal);
+						tc.setVisible(true);
+						
 					}
 					
 				}
@@ -136,7 +141,10 @@ public class TelaBuscaAluno extends JDialog {
 			}else{
 				Sistema.setAluno(((AlunoTableModel)table.getModel()).get(table.getSelectedRow()));
 				dispose();
-				Sistema.validacaoParaCadastroDossie();
+				TelaClassificacao tc = new TelaClassificacao(principal);
+				tc.setVisible(true);
+				
+
 			}
 			
 		}

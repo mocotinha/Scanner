@@ -28,6 +28,7 @@ public class Application {
 			Usuario user = new Usuario();
 			user.setNome("FAUSTO");
 			user.setLogin("admin");
+			user.setTipo(1);
 			user.setSenha(Sistema.md5("12345"));
 			dao.persist(user);
 		}finally{

@@ -268,15 +268,14 @@ public class Sistema {
 	}
 
 
-	public static void cadastraCurso(String nome, String nivel, String instituicao) throws CursoExistenteException {
+	public static void cadastraCurso(String nome, String nivel) throws CursoExistenteException {
 		Curso cur = new Curso();
 		cur.setNome(nome);
 		cur.setNivel(nivel);
 		DAOCurso dao = new DAOCurso();
-		DAOInstituicao daoI = new DAOInstituicao();
+		
 		DAO.open();
 		DAO.begin();  
-		cur.setInstituicao(daoI.findPorNome(instituicao));
 		Curso aux;
 		try{
 			aux = dao.findByNomeSingle(nome);
@@ -481,7 +480,7 @@ public class Sistema {
 			JOptionPane.showMessageDialog(null, "Você Não Selecionou um Curso");
 			return;
 		}
-		
+		dossie.setClassificacao((String) dados.get("classificacao"));
 		dossie.setAluno((Aluno) dados.get("aluno"));
 		dossie.setInstituicao((Instituicao) dados.get("instituicao"));
 		dossie.setCurso((Curso) dados.get("curso"));
@@ -549,7 +548,7 @@ public class Sistema {
 
 
 	public static void cadastraDocumentoAoDossie(Dossie dossie, String titulo,
-			String classificacao, String descricao, String tipo) {
+			 String descricao, String tipo) {
 		DocumentoDigital doc = new DocumentoDigital();
 		
 		if(tipo.equals("Documento Pessoal")){
@@ -565,7 +564,6 @@ public class Sistema {
 		imgs.clear();
 		doc.setTitulo(titulo);
 		doc.setDescricao(descricao);
-		doc.setClassificacao(classificacao);
 		doc.setUserResponsavel(user);
 		dossie.addDocumentoDigital(doc);
 		DAODossie dao = new DAODossie();
@@ -588,7 +586,7 @@ public class Sistema {
 	}
 
 
-	public static void atualizaDocumentos(Dossie dossie, String titulo, String classificacao, String descricao, String tipo, int index) {
+	public static void atualizaDocumentos(Dossie dossie, String titulo, String descricao, String tipo, int index) {
 		DocumentoDigital doc = dossie.getDocumentos().get(index);
 		
 		if(tipo.equals("Documento Pessoal")){
@@ -601,7 +599,7 @@ public class Sistema {
 
 		doc.setTitulo(titulo);
 		doc.setDescricao(descricao);
-		doc.setClassificacao(classificacao);
+		
 		doc.setUserResponsavel(user);
 		for (Imagem imagem : imgs) {
 			imagem.setDoc(doc);
@@ -649,6 +647,12 @@ public class Sistema {
 		DAO.commit();
 		DAO.close();
 		return a;
+	}
+
+
+	public static void classificaDossie(String text) {
+		dados.put("classificacao", text);
+		
 	}
 
 

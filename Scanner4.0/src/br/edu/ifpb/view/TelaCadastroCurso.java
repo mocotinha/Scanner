@@ -3,10 +3,11 @@ package br.edu.ifpb.view;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,21 +20,26 @@ import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.model.Curso;
 import br.edu.ifpb.model.CursoExistenteException;
 
+import javax.swing.JComboBox;
+
 @SuppressWarnings("serial")
 public class TelaCadastroCurso extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField nome;
-	private JTextField nivel;
 	private Curso curso;
 	@SuppressWarnings("rawtypes")
 	private JComboBox comboBox;
+	private String nivel[] = new String[] {"EJA", "Integrado" , "Médio","Pronatec", "Subsequente", "Superior","Técnico",};
+	private List<String> nivel2 = Arrays.asList(nivel);
+	
 
 
 	/**
 	 * @wbp.parser.constructor
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroCurso(JFrame telaPrincipal) {
 		
 		super(telaPrincipal,"Cadastro de Curso",true);
@@ -73,26 +79,27 @@ public class TelaCadastroCurso extends JDialog {
 		lblNvel.setBounds(33, 187, 46, 14);
 		contentPanel.add(lblNvel);
 		
-		nivel = new JTextField();
-		nivel.setBounds(141, 184, 351, 20);
-		nivel.setDocument(new LimitarMaiusculas());
-		contentPanel.add(nivel);
-		nivel.setColumns(10);
 		
-	
-		comboBox = new JComboBox(new DefaultComboBoxModel(Sistema.getNomeDasInstituicao()));
-		comboBox.setBounds(141, 75, 351, 22);
+		
+		
+		
+		
+		
+		comboBox = new JComboBox();
+		ArrayList<String> array = new ArrayList<String>(nivel2);
+		comboBox.setModel(new AbstractComboBoxModel(array));	
+		comboBox.setBounds(141, 184, 351, 20);
 		contentPanel.add(comboBox);
 		
-		JLabel lblInstituio = new JLabel("Institui\u00E7\u00E3o:");
-		lblInstituio.setBounds(33, 79, 82, 14);
-		contentPanel.add(lblInstituio);
+	
+		
 		
 		
 		
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public TelaCadastroCurso(JFrame telaPrincipal,Curso curso) {
 		super(telaPrincipal,"Cadastro de Curso",true);
 		this.curso = curso;
@@ -133,23 +140,17 @@ public class TelaCadastroCurso extends JDialog {
 		lblNvel.setBounds(33, 187, 46, 14);
 		contentPanel.add(lblNvel);
 		
-		nivel = new JTextField(curso.getNivel());
-		nivel.setBounds(141, 184, 351, 20);
-		nivel.setDocument(new LimitarMaiusculas());
-		contentPanel.add(nivel);
-		nivel.setColumns(10);
-		
-		
-		comboBox = new JComboBox(new DefaultComboBoxModel(Sistema.getNomeDasInstituicao()));
-		comboBox.setEnabled(false);
-		comboBox.setSelectedItem(curso.getInstituicao().getNome());
-		comboBox.setBounds(141, 75, 351, 22);
+		comboBox = new JComboBox();
+		ArrayList<String> array = new ArrayList<String>(nivel2);
+		comboBox.setModel(new AbstractComboBoxModel(array));
+		comboBox.setSelectedIndex(array.indexOf(curso.getNivel()));
+		comboBox.setBounds(141, 184, 351, 20);
 		contentPanel.add(comboBox);
 		
-		JLabel lblInstituio = new JLabel("Institui\u00E7\u00E3o:");
-		lblInstituio.setBounds(33, 79, 82, 14);
 		
-		contentPanel.add(lblInstituio);
+		
+		
+		
 		
 		
 		
@@ -169,7 +170,7 @@ public class TelaCadastroCurso extends JDialog {
 	
 	private void limpar(){
 		nome.setText("");
-		nivel.setText("");
+		comboBox.setSelectedIndex(0);
 		
 	}
 	
@@ -183,7 +184,7 @@ public class TelaCadastroCurso extends JDialog {
 			}
 			try{
 				curso.setNome(nome.getText());
-				curso.setNivel(nivel.getText());
+				curso.setNivel((String)comboBox.getSelectedItem());
 				Sistema.atualizaCurso(curso);
 				JOptionPane.showMessageDialog(classe(), "Curso Atualizado com Sucesso!");
 				dispose();
@@ -205,12 +206,9 @@ public class TelaCadastroCurso extends JDialog {
 				JOptionPane.showMessageDialog(classe(), "O nome do curso não deve ser vazio!");
 				return;
 			}
-			if(comboBox.getSelectedIndex() == -1){
-				JOptionPane.showMessageDialog(classe(), "Você deve primeiro ter uma Instituição cadastrada, a instituição não pode ser vazia!");
-				return;
-			}
+			
 			try{
-				Sistema.cadastraCurso(nome.getText(),nivel.getText(),(String)comboBox.getSelectedItem());
+				Sistema.cadastraCurso(nome.getText(),(String) comboBox.getSelectedItem());
 				JOptionPane.showMessageDialog(classe(), "Curso Cadastrado Com Sucesso");
 				limpar();
 			}catch(CursoExistenteException e1){

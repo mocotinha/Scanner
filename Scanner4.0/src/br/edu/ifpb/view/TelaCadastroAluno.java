@@ -6,7 +6,10 @@ import java.text.DateFormat;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -254,8 +257,12 @@ public class TelaCadastroAluno extends JDialog {
 		contentPanel.add(btnConcluir);
 		
 		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"}));
-		comboBox.setSelectedIndex(14);
+		String ufs[] = new String[] {"AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"};
+		List<String> ufs2 = Arrays.asList(ufs);
+		ArrayList<String> array = new ArrayList<String>(ufs2);
+		comboBox.setModel(new AbstractComboBoxModel(array));
+		System.out.println(array.indexOf(aluno.getUf()));
+		comboBox.setSelectedIndex(ufs2.indexOf(aluno.getUf()));
 		comboBox.setBounds(274, 92, 46, 25);
 		contentPanel.add(comboBox);
 		
@@ -289,6 +296,7 @@ public class TelaCadastroAluno extends JDialog {
 		mae.setText("");
 		pai.setText("");
 	}
+	
 	
 	
 	private class AtualizarListener implements ActionListener{

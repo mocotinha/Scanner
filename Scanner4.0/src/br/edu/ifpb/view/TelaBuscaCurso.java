@@ -8,7 +8,6 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -23,10 +22,10 @@ import br.edu.ifpb.model.table.CursoTableModel;
 public class TelaBuscaCurso extends JDialog {
 	private JTextField textField;
 	private JTable table;
-	private JFrame principal;
+	private TelaPrincipal principal;
 
 
-	public TelaBuscaCurso(JFrame principal, int tipo) {
+	public TelaBuscaCurso(TelaPrincipal principal, int tipo) {
 		super(principal, "Cursos", true);
 		this.principal = principal;
 		setBounds(100, 100, 800, 312);
@@ -41,6 +40,7 @@ public class TelaBuscaCurso extends JDialog {
 		textField.setBounds(65, 19, 563, 20);
 		getContentPane().add(textField);
 		textField.setColumns(10);
+		textField.addActionListener(new BuscarListener());
 		
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.setBounds(655, 16, 98, 26);
@@ -118,7 +118,7 @@ public class TelaBuscaCurso extends JDialog {
 
 	}
 	
-	private JFrame classePrincipal(){
+	private TelaPrincipal classePrincipal(){
 		return principal;
 	}
 	

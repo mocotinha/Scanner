@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -22,11 +23,12 @@ public class DocumentoDigital{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	private String titulo;
-	private String classificacao;
+
 	private String descricao;
 	private String tipo;
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date dataLeitura;
+	@OrderColumn
 	@OneToMany(mappedBy="doc",cascade = CascadeType.ALL, fetch=FetchType.EAGER)
 	private List<Imagem> imagens = new ArrayList<Imagem>();
 	@ManyToOne
@@ -71,13 +73,8 @@ public class DocumentoDigital{
 		this.titulo = titulo;
 	}
 
-	public String getClassificacao() {
-		return classificacao;
-	}
+	
 
-	public void setClassificacao(String classificacao) {
-		this.classificacao = classificacao;
-	}
 
 	public Date getDataLeitura() {
 		return dataLeitura;

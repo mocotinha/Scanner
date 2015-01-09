@@ -36,9 +36,11 @@ public class TelaBuscaDossie extends JDialog {
 		getContentPane().add(lblBuscar);
 		
 		textField = new JTextField();
+		textField.setDocument(new LimitarMaiusculas());
 		textField.setBounds(65, 19, 563, 20);
 		getContentPane().add(textField);
 		textField.setColumns(10);
+		textField.addActionListener(new BuscarDossieActionListener());
 		
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener(new BuscarDossieActionListener());

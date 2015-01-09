@@ -39,6 +39,7 @@ public class TelaBuscaUsuario extends JDialog {
 		textField.setBounds(65, 19, 563, 20);
 		getContentPane().add(textField);
 		textField.setColumns(10);
+		textField.addActionListener(new BuscarListener());
 		
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.setBounds(655, 16, 98, 26);

@@ -8,8 +8,6 @@ import uk.co.mmscomputing.device.scanner.ScannerIOMetadata;
 import uk.co.mmscomputing.device.scanner.ScannerIOMetadata.Type;
 import uk.co.mmscomputing.device.scanner.ScannerListener;
 import uk.co.mmscomputing.device.twain.TwainFailureException;
-import uk.co.mmscomputing.device.twain.TwainNativeLoadStrategySingleton;
-import uk.co.mmscomputing.device.twain.TwainSource;
 import uk.co.mmscomputing.device.twain.jtwain;
 
 public class SistemaDeDigitalizacao implements ScannerListener {

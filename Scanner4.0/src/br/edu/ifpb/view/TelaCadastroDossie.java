@@ -5,10 +5,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -32,6 +32,7 @@ import br.edu.ifpb.controler.Sistema;
 import br.edu.ifpb.model.DocumentoDigital;
 import br.edu.ifpb.model.Dossie;
 import br.edu.ifpb.model.Imagem;
+import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class TelaCadastroDossie extends JDialog {
@@ -40,7 +41,6 @@ public class TelaCadastroDossie extends JDialog {
 	private JTextField curso;
 	private JTextField aluno;
 	private JTextField titulo;
-	private JTextField classificao;
 	private JTextField codigoDossie;
 	private JTextField qntDocumentos;
 	@SuppressWarnings("rawtypes")
@@ -55,6 +55,9 @@ public class TelaCadastroDossie extends JDialog {
 	private JScrollPane scrollPane_2 ;
 	private boolean status = true;
 	private JButton selImagem;
+	private String tipos[] = new String[] {"Documento Acad\u00EAmico", "Documento Pessoal"};
+	private List<String> tipos2 = Arrays.asList(tipos);
+	private List<String> tipos3 = new ArrayList<String>(tipos2);
 
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -103,23 +106,14 @@ public class TelaCadastroDossie extends JDialog {
 		aluno.setColumns(10);
 		
 		JLabel lblTtulo = new JLabel("T\u00EDtulo:");
-		lblTtulo.setBounds(25, 140, 55, 16);
+		lblTtulo.setBounds(25, 173, 55, 16);
 		getContentPane().add(lblTtulo);
 		
 		titulo = new JTextField();
-		titulo.setBounds(139, 138, 350, 20);
+		titulo.setBounds(139, 171, 350, 20);
 		titulo.setDocument(new LimitarMaiusculas());
 		getContentPane().add(titulo);
 		titulo.setColumns(10);
-		
-		JLabel lblClassificao = new JLabel("Classifica\u00E7\u00E3o:");
-		lblClassificao.setBounds(25, 168, 93, 16);
-		getContentPane().add(lblClassificao);
-		
-		classificao = new JTextField();
-		classificao.setBounds(139, 170, 350, 20);
-		getContentPane().add(classificao);
-		classificao.setColumns(10);
 		
 		JLabel lblDescrio = new JLabel("Descri\u00E7\u00E3o:");
 		lblDescrio.setBounds(25, 230, 78, 16);
@@ -164,12 +158,12 @@ public class TelaCadastroDossie extends JDialog {
 		getContentPane().add(btnRemoverImagemDigitalizada);
 		
 		JLabel lblTipoDoDocumento = new JLabel("Tipo do Documento:");
-		lblTipoDoDocumento.setBounds(25, 112, 112, 16);
+		lblTipoDoDocumento.setBounds(25, 145, 112, 16);
 		getContentPane().add(lblTipoDoDocumento);
 		
 		tipo = new JComboBox();
-		tipo.setModel(new DefaultComboBoxModel(new String[] {"Documento Acad\u00EAmico", "Documento Pessoal"}));
-		tipo.setBounds(139, 108, 350, 25);
+		tipo.setModel(new AbstractComboBoxModel(tipos3));
+		tipo.setBounds(139, 141, 350, 25);
 		getContentPane().add(tipo);
 		
 		JButton btnCadastrarDocumento = new JButton("Salvar");
@@ -218,7 +212,7 @@ public class TelaCadastroDossie extends JDialog {
 		qntDocumentos.setColumns(10);
 		
 		scrollPane_2= new JScrollPane();
-		scrollPane_2.setBounds(609, 96, 148, 117);
+		scrollPane_2.setBounds(509, 104, 249, 117);
 		getContentPane().add(scrollPane_2);
 		
 		list = new JList();
@@ -228,14 +222,20 @@ public class TelaCadastroDossie extends JDialog {
 		list.addListSelectionListener(new DocumentoSelecionadoListener());
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		JLabel lblDocumentos = new JLabel("Documentos:");
-		lblDocumentos.setBounds(509, 99, 90, 14);
+		JLabel lblDocumentos = new JLabel("Documentos Cadastrados:");
+		lblDocumentos.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblDocumentos.setBounds(509, 85, 168, 14);
 		getContentPane().add(lblDocumentos);
 		
-		selImagem = new JButton("Selecionar Imagem");
+		selImagem = new JButton("Selecionar Imagem de Arquivo");
 		selImagem.addActionListener(new SelecionaArquivoListener());
 		selImagem.setBounds(287, 384, 202, 26);
 		getContentPane().add(selImagem);
+		
+		JLabel lblDocumentos_1 = new JLabel("Documentos:");
+		lblDocumentos_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblDocumentos_1.setBounds(25, 120, 90, 14);
+		getContentPane().add(lblDocumentos_1);
 
 	}
 	
@@ -291,16 +291,11 @@ public class TelaCadastroDossie extends JDialog {
 		public void valueChanged(ListSelectionEvent e) {
 			limpar();
 			DocumentoDigital aux = ((ListaDocumento)list.getModel()).getElementAt(list.getSelectedIndex());
-			if(aux.getTipo().equals("Documento Acadêmico")){
-				tipo.setSelectedItem(0);
-				
-			}else{
-				tipo.setSelectedItem(1);
-				
-			}
+
+			tipo.setSelectedIndex(tipos3.indexOf(aux.getTipo()));
 			Sistema.setImagens(aux.getImagens());
 			titulo.setText(aux.getTitulo());
-			classificao.setText(aux.getClassificacao());
+			
 			descricao.setText(aux.getDescricao());
 			
 			status = false;
@@ -405,26 +400,33 @@ public class TelaCadastroDossie extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			try{
-				Sistema.removerImagem((Imagem)lista.getModel().getElementAt(lista.getSelectedIndex()));
+			if(JOptionPane.showConfirmDialog(classe(), "Deseja remover a imagem selecionada?","Remover Imagem",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+				try{
+					Sistema.removerImagem((Imagem)lista.getModel().getElementAt(lista.getSelectedIndex()));
+					
+					atualizaListaDeImagens();
+					
+					getContentPane().remove(lblNenhumaImagemSelecionada);
+					lblNenhumaImagemSelecionada = new JLabel("Nenhuma Imagem Selecionada");
+					lblNenhumaImagemSelecionada.setHorizontalAlignment(SwingConstants.CENTER);
+					lblNenhumaImagemSelecionada.setBounds(555, 256, 202, 241);
+					lblNenhumaImagemSelecionada.setIcon(null);
+					getContentPane().add(lblNenhumaImagemSelecionada);
+					getContentPane().repaint();
+					
+					
+					
+					
+					lista.setSelectedIndex(-1);
+				}catch(Exception ex){
+					JOptionPane.showMessageDialog(classe(), "Nenhuma Imagem foi selecionada para exclusão!");
+				}
 				
-				atualizaListaDeImagens();
-				
-				getContentPane().remove(lblNenhumaImagemSelecionada);
-				lblNenhumaImagemSelecionada = new JLabel("Nenhuma Imagem Selecionada");
-				lblNenhumaImagemSelecionada.setHorizontalAlignment(SwingConstants.CENTER);
-				lblNenhumaImagemSelecionada.setBounds(555, 256, 202, 241);
-				lblNenhumaImagemSelecionada.setIcon(null);
-				getContentPane().add(lblNenhumaImagemSelecionada);
-				getContentPane().repaint();
 				
 				
-				
-				
-				lista.setSelectedIndex(-1);
-			}catch(Exception ex){
-				JOptionPane.showMessageDialog(classe(), "Nenhuma Imagem foi selecionada para exclusão!");
 			}
+				
+			
 			
 			
 			
@@ -441,7 +443,7 @@ public class TelaCadastroDossie extends JDialog {
 		list.setSelectedIndex(-1);
 		titulo.setText("");
 		descricao.setText("");
-		classificao.setText("");
+		
 		tipo.setSelectedIndex(0);
 		status = true;
 		getContentPane().remove(lblNenhumaImagemSelecionada);
@@ -467,10 +469,10 @@ public class TelaCadastroDossie extends JDialog {
 			}
 			try{
 				if(status){
-					Sistema.cadastraDocumentoAoDossie(dossie,titulo.getText(),classificao.getText(), descricao.getText(),(String)tipo.getSelectedItem());
+					Sistema.cadastraDocumentoAoDossie(dossie,titulo.getText(), descricao.getText(),(String)tipo.getSelectedItem());
 					JOptionPane.showMessageDialog(classe(), "Documento Cadastrado com Sucesso!");
 				}else{
-					Sistema.atualizaDocumentos(dossie,titulo.getText(),classificao.getText(), descricao.getText(),(String)tipo.getSelectedItem(),list.getSelectedIndex());
+					Sistema.atualizaDocumentos(dossie,titulo.getText(), descricao.getText(),(String)tipo.getSelectedItem(),list.getSelectedIndex());
 					JOptionPane.showMessageDialog(classe(), "Documento Atualizado com Sucesso!");
 				}
 				
@@ -497,7 +499,10 @@ public class TelaCadastroDossie extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			limpar();
+			if(JOptionPane.showConfirmDialog(classe(), "Deseja cadastrar um novo Documento?","Novo Documento",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+				limpar();
+			}	
+			
 			
 			
 		}
@@ -508,8 +513,12 @@ public class TelaCadastroDossie extends JDialog {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			dispose();
-			Sistema.cadastroDossie();
+			if(JOptionPane.showConfirmDialog(classe(), "Deseja cadastrar um novo Dossiê?","Novo Dossie",JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+				dispose();
+				Sistema.cadastroDossie();
+			}
+			
+			
 			
 		}
 		

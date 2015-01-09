@@ -87,25 +87,25 @@ public class SistemaDeTelas {
 	}
 
 	public static void listaAlunos() {
-		TelaBuscaAluno tba = new TelaBuscaAluno(telas.get(TELA_PRINCIPAL),0);
+		TelaBuscaAluno tba = new TelaBuscaAluno((TelaPrincipal) telas.get(TELA_PRINCIPAL),0);
 		tba.setVisible(true);
 		
 	}
 
 	public static void listaCursos() {
-		TelaBuscaCurso tbc = new TelaBuscaCurso(telas.get(TELA_PRINCIPAL),0);
+		TelaBuscaCurso tbc = new TelaBuscaCurso((TelaPrincipal) telas.get(TELA_PRINCIPAL),0);
 		tbc.setVisible(true);
 		
 	}
 
 	public static void listaInstituicao() {
-		TelaBuscaInstituicao tbi = new TelaBuscaInstituicao(telas.get(TELA_PRINCIPAL),0);
+		TelaBuscaInstituicao tbi = new TelaBuscaInstituicao((TelaPrincipal) telas.get(TELA_PRINCIPAL),0);
 		tbi.setVisible(true);
 		
 	}
 
 	public static void cadastroDossie() {
-		TelaBuscaInstituicao tbi = new TelaBuscaInstituicao(telas.get(TELA_PRINCIPAL),1);
+		TelaBuscaInstituicao tbi = new TelaBuscaInstituicao((TelaPrincipal) telas.get(TELA_PRINCIPAL),1);
 		tbi.setVisible(true);
 				
 	}
